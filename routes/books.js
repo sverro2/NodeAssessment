@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express();
-var Book, Author;
+var Book;
 var _ = require('underscore');
 var handleError;
 var async = require('async');
@@ -44,7 +44,6 @@ router.route('/:id')
 module.exports = function (mongoose, errCallback){
 	console.log('Initializing books routing module');
 	Book = mongoose.model('Book');
-	Author = mongoose.model('Author');
 	handleError = errCallback;
 	return router;
 };
