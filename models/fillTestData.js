@@ -1,5 +1,4 @@
 var Book;
-var Author;
 
 function saveCallback(err){
 	if(err){
@@ -35,28 +34,6 @@ function fillTestBooks(callback){
 
 			testData.forEach(function(book){
 				new Book(book).save(saveCallback);
-			});
-		} else{
-			console.log('Skipping create courses testdata, allready present');
-		}
-
-		if(callback){ callback(); }
-	});
-};
-
-function fillTestAuthors(callback){
-	var testData = [
-		// Vul hier je testdata voor authors in
-		// {}, {}, {}
-	];
-
-	Author.find({}, function(err, data){
-		// Als er nog geen author zijn vullen we de testdata
-		if(data.length == 0){
-			console.log('Creating authors testdata');
-
-			testData.forEach(function(author){
-				new Author(author).save(saveCallback);
 			});
 		} else{
 			console.log('Skipping create courses testdata, allready present');

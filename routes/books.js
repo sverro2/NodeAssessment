@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express();
-var Book;
+var Book, Author;
 var _ = require('underscore');
+var handleError;
 var async = require('async');
 
 /*
@@ -40,8 +41,10 @@ router.route('/:id')
 	.get(getBooks);
 
 // Export
-module.exports = function (mongoose){
+module.exports = function (mongoose, errCallback){
 	console.log('Initializing books routing module');
 	Book = mongoose.model('Book');
+	Author = mongoose.model('Author');
+	handleError = errCallback;
 	return router;
 };
