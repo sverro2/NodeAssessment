@@ -30,6 +30,7 @@ function handleError(req, res, statusCode, message){
 // Routes
 var routes = require('./routes/index');
 var books = require('./routes/books')(mongoose, handleError);
+var socket = require('./routes/socket'); // enable to use socket.io
 // /Routes
 
 var app = express();
