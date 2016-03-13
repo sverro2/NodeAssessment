@@ -6,6 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var exphbs  = require('express-handlebars');
+var request = require('request');
+
+var GLOBAL_VARS = {
+  google_places_api_key: "AIzaSyAdex7lYIUaHxMyYzVBcpYWieNaCJc_PRM"
+}
 
 // Data Access Layer
 mongoose.connect('mongodb://localhost:27017/NodeAssessment');
@@ -28,7 +33,7 @@ function handleError(req, res, statusCode, message){
 };
 
 // Routes
-var routes = require('./routes/index');
+var routes = require('./routes/index')(request, GLOBAL_VARS);
 var books = require('./routes/books')(mongoose, handleError);
 // /Routes
 
@@ -65,7 +70,8 @@ if (app.get('env') === 'development') {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
-            error: err
+            status: err.status,
+            error: err.stack
         });
     });
 }
@@ -76,6 +82,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
+        status: err.status,
         error: {}
     });
 });
