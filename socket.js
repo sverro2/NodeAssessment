@@ -15,10 +15,6 @@ function initIo() {
     });
 }
 
-function sendMsg(msg) {
-    io.emit('message: ' + msg);
-}
-
 module.exports = function (http) {
 
     if (!io && http) {
