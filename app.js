@@ -39,6 +39,7 @@ var books = require('./routes/books')(mongoose, handleError);
 
 var app = express();
 
+
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');

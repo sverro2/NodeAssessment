@@ -19,13 +19,19 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = http.Server(app);
+
+/* Socket.io */
+    app.io = require("../socket")(server);
+/* / Socket.io*/
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, function(){
+    console.log("listening to port: 3000");
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
