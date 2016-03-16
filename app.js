@@ -13,7 +13,7 @@ var GLOBAL_VARS = {
 }
 
 // Data Access Layer
-mongoose.connect('mongodb://localhost:27017/NodeAssessment');
+mongoose.connect('mongodb://admin:wachtwoord@ds015879.mlab.com:15879/node-assessment');
 // /Data Access Layer
 
 // Models

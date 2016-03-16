@@ -24,9 +24,7 @@ router.get('/placesTest', function (req, res) {
   googlePlacesRequests.push(function(callback){
     request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=51.688074,5.284939&radius=500&type=cafe&key=' + places_key, function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        console.log('body: ' + body);
         var info = body;
-        console.log('parsed: ' + info);
         // do more stuff
         cafes = info;
       }
