@@ -18,6 +18,10 @@ mongoose.connect('mongodb://admin:wachtwoord@ds015879.mlab.com:15879/node-assess
 
 // Models
 require('./models/book')(mongoose);
+require('./models/contestLocationPlanning')(mongoose);
+require('./models/contestLocationData')(mongoose);
+require('./models/contest')(mongoose);
+require('./models/user')(mongoose);
 require('./models/fillTestData')(mongoose);
 // /Models
 

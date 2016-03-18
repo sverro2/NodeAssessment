@@ -19,7 +19,12 @@
         "serve-favicon": "2.2.0",
         "socket.io": "^1.4.5",
         "underscore": "1.8.2",
-        "request": "^2.69.0"
+        "request": "^2.69.0",
+        "passport" : "~0.1.17",
+        "passport-local" : "~0.1.6",
+        "passport-facebook" : "~1.0.2",
+        "passport-google-oauth" : "~0.1.5",
+        "bcrypt-nodejs" : "latest"
     },
     "devDependencies": {
         "chai": "^2.1.2",
