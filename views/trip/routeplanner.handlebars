@@ -1,0 +1,19 @@
+<div class="row">
+  {{#if id}}
+    <form action="./{{id}}" autocomplete="off" method="POST">
+  {{else}}
+    <form action="./" autocomplete="off" method="post">
+  {{/if}}
+    <fieldset class="form-group">
+      <label for="tripName">The trip's Name </label>
+      <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{name}}" name="tripName">
+    </fieldset>
+    <fieldset class="form-group">
+      <label for="tripDescription">Description</label>
+      <textarea name="tripDescription" class="form-control" rows="5" placeholder="Description of your trip...">{{description}}</textarea>
+    </fieldset>
+    <input type="hidden" name="tripId" value="{{id}}" />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

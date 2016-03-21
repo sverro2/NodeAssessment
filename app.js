@@ -38,6 +38,7 @@ function handleError(req, res, statusCode, message){
 
 // Routes
 var routes = require('./routes/index')(request, GLOBAL_VARS);
+var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
 var books = require('./routes/books')(mongoose, handleError);
 // /Routes
 
@@ -58,6 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/books', books);
+app.use('/planner', planner);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

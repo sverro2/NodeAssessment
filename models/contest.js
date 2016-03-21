@@ -21,7 +21,8 @@ function init(mongoose){
 			required: true,
 			validate: DateAfterTodayChecker
 		},
-		contestLocationPlanning: { type: Schema.Types.ObjectId, ref: 'ContestLocationPlanning'}
+		contestLocationPlanning: { type: Schema.Types.ObjectId, ref: 'ContestLocationPlanning'},
+		winner: { type: Schema.Types.ObjectId, ref: 'User', required: false}
 	});
 
 	contest.pre('validate', function(next) {

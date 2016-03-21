@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Filter trips..." id="filterInput">
+    <span class="input-group-btn">
+      <button class="btn btn-secondary" type="button" id="filterButton">Filter!</button>
+    </span>
+  </div>
+</div>
+
+<div class="row top-buffer">
+  <div class="list-group filterable">
+    {{#each data}}
+    <div class="list-group-item">
+      <div class="input-group">
+        <h4>{{name}}</h4>
+        <span class="input-group-btn">
+          <a href="planner/{{_id}}" class="btn btn-warning">Edit</a>
+          <button data-url="planner/{{_id}}" class="btn btn-danger removeOnClick">Remove</button>
+        </span>
+      </div>
+      <span>{{description}}</span>
+    </div>
+    {{/each}}
+</div>
+<a href="planner/new-trip" class="btn btn-primary pull-right btn-lg">Create a New Trip</a>
+
+<!--<button class="btn btn-warning btn-block" type="button">Load More!</button>-->
