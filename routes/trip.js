@@ -42,7 +42,11 @@ router.post('/:id', function (req, res) {
 router.get('/:id', function (req, res) {
     var trip = req.params.id;
     Trip.findOne({_id: trip}).exec(function(err, tripData){
-      res.render('./trip/routeplanner', { title: 'Bewerk Trip', id: tripData._id, name: tripData.name, description: tripData.description, rout: tripData.route});
+      if(err){
+        res.redirect('/planner');
+      }else{
+        res.render('./trip/routeplanner', { title: 'Bewerk Trip', id: tripData._id, name: tripData.name, description: tripData.description, rout: tripData.route});
+      }
     });
 });
 
@@ -54,36 +58,89 @@ router.delete('/:id', function (req, res) {
     res.send();
 });
 
-//how to use the places API
-router.get('/placesTest', function (req, res) {
-  var googlePlacesRequests = [];
-  var cafes, restaurants;
-  googlePlacesRequests.push(function(callback){
-    request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=51.688074,5.284939&radius=500&type=cafe&key=' + places_key, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var info = body;
-        // do more stuff
-        cafes = info;
-      }
-      callback();
-    });
+router.post('/:id/addLocations', function(req, res){
+  console.log("Adding locations");
+  console.log(req.params.id + " gets some new locations");
+  console.log(req.body);
+  var locationsInput = req.body;
+  var newLocations = [];
+  for(var key in locationsInput){
+      var location = locationsInput[key];
+      console.log("Trying to add location: " + location);
+      newLocations.push(JSON.parse(location));
+   }
+  console.log("Going to add the following locations to the database: " + newLocations);
+  Trip.addLocation(req.params.id, newLocations, function(err){
+    if(err){
+      console.log("An error occured while adding locations to the database: " + err);
+    }
   });
+  res.json({success: true});
+});
 
-  googlePlacesRequests.push(function(callback){
-    request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=51.688074,5.284939&radius=500&type=restaurant&key=' + places_key, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var info = body;
-        // do more stuff
-        restaurants = info;
-      }
-      callback();
-    });
-  });
+router.post('/searchLocations/:key', function(req, res){
+  console.log("The key: " + req.params.key)
+  //get location from adress
+  request('https://maps.googleapis.com/maps/api/geocode/json?address=' + req.params.key + '&key=' + places_key, function (error, response, body) {
+    var locationData = JSON.parse(body)
+    if(locationData.results[0]){
+      console.log('Searching cafes and bars in the neighbourhood of:')
+      console.log(locationData.results[0].formatted_address)
+      var location = locationData.results[0].geometry.location;
 
+      //async search all POI's
+      var googlePlacesRequests = [];
+      var cafes, bars;
+      googlePlacesRequests.push(function(callback){
+        request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ location.lat + ','+ location.lng +'&radius=500&type=cafe&key=' + places_key, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            cafes = JSON.parse(body);
+          }
+          callback();
+        });
+      });
 
-  async.parallel(googlePlacesRequests, function(){
-    //console.log('gelogt: ' + '{ "een": {'cafes + '}, "twee": {' + restaurants + '}');
-    res.json(JSON.parse('{ "een": ' + cafes + ', "twee": ' + restaurants + '}'));
+      googlePlacesRequests.push(function(callback){
+        request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ location.lat + ','+ location.lng +'&radius=500&type=bar&key=' + places_key, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            bars = JSON.parse(body);
+          }
+          callback();
+        });
+      });
+
+      async.parallel(googlePlacesRequests, function(){
+        var returnObject = { items: []};
+
+        //add item to array if it is not already added
+        function addItemToReturnObject(item){
+          var exists = false;
+          for(var x = 0; x < returnObject.items.length; x++){
+            exists = returnObject.items[x]._id == item.id;
+            if(exists){
+              break;
+            }
+          }
+          if(!exists){
+            returnObject.items.push({_id: item.id, name: item.name.replace(/['"]+/g, ""), lat: item.geometry.location.lat, long: item.geometry.location.lng});
+          }
+
+        }
+
+        if(bars.results[0]){
+          bars.results.forEach(function(item){
+            addItemToReturnObject(item);
+          });
+        }
+
+        if(cafes.results[0]){
+          cafes.results.forEach(function(item){
+            addItemToReturnObject(item);
+          });
+        }
+        res.json(returnObject);
+      });
+    }
   });
 });
 

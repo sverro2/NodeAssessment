@@ -8,14 +8,16 @@ function init(mongoose){
 		description: { type: String, required: false },
 		route: { type: [
 		{
-			googleId: { type: String, required: true },
+			_id: { type: String, required: true },
 			name: { type: String, required: true },
-			lat: { type: String, required: true },
-			long: { type: String, required: true }
+			lat: { type: Number, required: true },
+			long: { type: Number, required: true }
 		}]}
 	});
 
-	//contestLocationPlanning.set('toJSON', { virtuals: true });
+	contestLocationPlanning.statics.addLocation = function(planningId, locationObjectsArray, cb){
+		this.update({_id: planningId}, { $addToSet: { route: { $each: locationObjectsArray } } }, cb);
+  }
 
 	mongoose.model('ContestLocationPlanning', contestLocationPlanning);
 }
