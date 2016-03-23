@@ -7,14 +7,8 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/style.css">
 
-    <style>
-    body {
-      padding-top: 60px;
-    }
-
-    .top-buffer { margin-top:10px; }
-    </style>
 </head>
 <body>
   <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -47,55 +41,6 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <script>
-    $(document).ready(function(){
-      $('.filterButton').on('click', filterResults);
-      $('.removeOnClick').on('click', deleteRequest);
-      $('.filterInput').on('keyup', filterResults);
-      $('#searchLocationsButton').on('click', findLocations);
-    });
-
-    function filterResults(){
-      var filterText = $('.filterInput').val();
-      $('.filterable').children(".filter-item").each(function(){
-        if($(this).find('.search').html().toLowerCase().indexOf(filterText.toLowerCase()) > -1){
-          $(this).show();
-        }else{
-          $(this).hide();
-        }
-      });
-    }
-
-    function deleteRequest(){
-      var $clickedButton = $(this);
-      var urlToDelete = $clickedButton.data('url');
-      $.ajax({
-        url: urlToDelete,
-        type: 'DELETE',
-        success: function(result) {
-          $clickedButton.closest('.list-group-item').hide();
-        }
-      });
-    }
-
-    function findLocations(){
-      var search = $('#locationInput').val();
-      search = encodeURIComponent(search);
-      $('#locationInput').val('');
-      $.ajax({
-        url: '{{id}}/searchLocations/' + search,
-        type: 'POST',
-        success: function(result) {
-          //add results to locations-to-add
-          var resultsHTML = "";
-
-          result.items.forEach(function(item){
-            resultsHTML += '<div class="checkbox filter-item"><label class="search"><input type="checkbox" value=\'' + JSON.stringify(item) + '\' name="' + item._id + '">' + item.name + '</label></div>';
-          });
-          $('#locations-to-add').html(resultsHTML);
-        }
-      });
-    }
-  </script>
+  <script src="/javascripts/main.js"></script>
 </body>
 </html>

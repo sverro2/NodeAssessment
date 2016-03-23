@@ -31,7 +31,7 @@ function init(mongoose){
   }
 
 	contestLocationPlanning.statics.deleteLocation = function(planningId, locationId, cb){
-		this.update({_id: planningId}, { $pull: { route: locationId  } }, cb);
+		this.update({_id: planningId}, { $pull: { route: {_id: locationId} } }, cb);
   }
 
 	mongoose.model('ContestLocationPlanning', contestLocationPlanning);
