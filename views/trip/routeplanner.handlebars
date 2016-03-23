@@ -38,9 +38,18 @@
     </div>
     <div id="collapse2" class="panel-collapse collapse">
       <div class="panel-body">
-        <form action="./{{id}}/removeLocations" autocomplete="off" method="POST">
-          <button type="submit" class="btn btn-danger pull-right">Remove Selected</button>
-        </form>
+          <div class="list-group filterable">
+            {{#each route}}
+            <div class="list-group-item filter-item">
+              <div class="input-group">
+                <h4 class="search">{{name}}</h4>
+                <span class="input-group-btn">
+                  <button data-url="./{{../id}}/locations/{{_id}}" class="btn btn-danger removeOnClick">Remove</button>
+                </span>
+              </div>
+            </div>
+            {{/each}}
+        </div>
       </div>
     </div>
   </div>
@@ -60,8 +69,9 @@
             <button class="btn btn-secondary" type="button" id="searchLocationsButton">Search for Locations</button>
           </span>
         </div>
-        <form action="./{{id}}/addLocations" autocomplete="off" method="POST">
-          <div id="locations-to-add">
+        <input type="text" class="form-control filterInput" placeholder="Filter locations...">
+        <form action="./{{id}}/locations" autocomplete="off" method="POST">
+          <div id="locations-to-add" class="filterable top-buffer">
           </div>
           <button class="btn btn-warning btn-block top-buffer hidden" type="search" id="load-more">Load More!</button>
           <button type="submit" class="btn btn-primary top-buffer pull-right" data-token="">Add Selected</button>

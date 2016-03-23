@@ -45,54 +45,66 @@ router.get('/:id', function (req, res) {
       if(err){
         res.redirect('/planner');
       }else{
-        res.render('./trip/routeplanner', { title: 'Bewerk Trip', id: tripData._id, name: tripData.name, description: tripData.description, rout: tripData.route});
+        res.render('./trip/routeplanner', {
+          title: 'Bewerk Trip',
+          id: tripData._id,
+          name: tripData.name,
+          description: tripData.description,
+          route: tripData.route});
       }
     });
 });
 
 router.delete('/:id', function (req, res) {
     Trip.remove({_id: req.params.id}, function(err){
-      res.status(304)
+      if(err){
+        res.status(300)
+      }
     });
 
     res.send();
 });
 
-router.post('/:id/addLocations', function(req, res){
-  console.log("Adding locations");
-  console.log(req.params.id + " gets some new locations");
-  console.log(req.body);
+router.post('/:id/locations', function(req, res){
   var locationsInput = req.body;
   var newLocations = [];
   for(var key in locationsInput){
       var location = locationsInput[key];
-      console.log("Trying to add location: " + location);
       newLocations.push(JSON.parse(location));
    }
-  console.log("Going to add the following locations to the database: " + newLocations);
   Trip.addLocation(req.params.id, newLocations, function(err){
     if(err){
       console.log("An error occured while adding locations to the database: " + err);
     }
   });
-  res.json({success: true});
+  res.redirect('/planner');
 });
 
-router.post('/searchLocations/:key', function(req, res){
-  console.log("The key: " + req.params.key)
+router.delete('/:id/locations/:location', function(req, res){
+  console.log("Nu wordt " + req.params.id + " verwijderd" + req.params.location);
+  Trip.deleteLocation(req.params.id, req.params.location, function(err){
+    if(err){
+      res.status(300)
+    }
+  });
+  res.send();
+});
+
+router.post('/:id/searchLocations/:key', function(req, res){
   //get location from adress
-  request('https://maps.googleapis.com/maps/api/geocode/json?address=' + req.params.key + '&key=' + places_key, function (error, response, body) {
+  request('https://maps.googleapis.com/maps/api/geocode/json?address=' +
+  req.params.key + '&key=' + places_key, function (error, response, body) {
     var locationData = JSON.parse(body)
     if(locationData.results[0]){
-      console.log('Searching cafes and bars in the neighbourhood of:')
-      console.log(locationData.results[0].formatted_address)
       var location = locationData.results[0].geometry.location;
 
       //async search all POI's
       var googlePlacesRequests = [];
       var cafes, bars;
       googlePlacesRequests.push(function(callback){
-        request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ location.lat + ','+ location.lng +'&radius=500&type=cafe&key=' + places_key, function (error, response, body) {
+        request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+
+        location.lat + ','+ location.lng +'&radius=500&type=cafe&key=' +
+        places_key, function (error, response, body) {
           if (!error && response.statusCode == 200) {
             cafes = JSON.parse(body);
           }
@@ -101,7 +113,9 @@ router.post('/searchLocations/:key', function(req, res){
       });
 
       googlePlacesRequests.push(function(callback){
-        request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ location.lat + ','+ location.lng +'&radius=500&type=bar&key=' + places_key, function (error, response, body) {
+        request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+
+        location.lat + ','+ location.lng +'&radius=500&type=bar&key=' +
+        places_key, function (error, response, body) {
           if (!error && response.statusCode == 200) {
             bars = JSON.parse(body);
           }
@@ -110,39 +124,55 @@ router.post('/searchLocations/:key', function(req, res){
       });
 
       async.parallel(googlePlacesRequests, function(){
-        var returnObject = { items: []};
+        var returnObject = { items: [] };
+        Trip.getLocations(req.params.id, function(locations){
+          addToReturn(locations);
+        });
 
-        //add item to array if it is not already added
-        function addItemToReturnObject(item){
-          var exists = false;
-          for(var x = 0; x < returnObject.items.length; x++){
-            exists = returnObject.items[x]._id == item.id;
-            if(exists){
-              break;
-            }
-          }
-          if(!exists){
-            returnObject.items.push({_id: item.id, name: item.name.replace(/['"]+/g, ""), lat: item.geometry.location.lat, long: item.geometry.location.lng});
+        function addToReturn(locations){
+          if(bars.results[0]){
+            bars.results.forEach(function(item){
+              addItemToReturnObject(item, returnObject, locations);
+            });
           }
 
+          if(cafes.results[0]){
+            cafes.results.forEach(function(item){
+              addItemToReturnObject(item,returnObject, locations);
+            });
+          }
+          res.json(returnObject);
         }
-
-        if(bars.results[0]){
-          bars.results.forEach(function(item){
-            addItemToReturnObject(item);
-          });
-        }
-
-        if(cafes.results[0]){
-          cafes.results.forEach(function(item){
-            addItemToReturnObject(item);
-          });
-        }
-        res.json(returnObject);
       });
     }
   });
 });
+
+//only adds item to the list when not already added to planning or the list itself
+function addItemToReturnObject(item, returnObject, addedLocations){
+  var exists;
+  //check whether or not item does not already exist in returnObject or is already added to the planning
+  for(var x = 0; x < addedLocations.route.length; x++){
+    exists = addedLocations.route[x]._id == item.id;
+    if(exists){
+      return;
+    }
+  }
+  for(var x = 0; x < returnObject.items.length; x++){
+    exists = returnObject.items[x]._id == item.id;
+    if(exists){
+      return;
+    }
+  }
+  returnObject.items.push(
+    {
+      _id: item.id, name: item.name.replace(/['"]+/g, ""),
+      lat: item.geometry.location.lat,
+      long: item.geometry.location.lng
+    }
+  );
+
+}
 
 // Export
 module.exports = function (req, GLOBAL_VARS, mongoose){

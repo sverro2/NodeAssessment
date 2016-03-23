@@ -12,11 +12,6 @@
     body {
       padding-top: 60px;
     }
-    @media (max-width: 979px) {
-      body {
-        padding-top: 0px;
-      }
-    }
 
     .top-buffer { margin-top:10px; }
     </style>
@@ -54,16 +49,16 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script>
     $(document).ready(function(){
-      $('#filterButton').on('click', filterResults);
+      $('.filterButton').on('click', filterResults);
       $('.removeOnClick').on('click', deleteRequest);
-      $('#filterInput').on('keyup', filterResults);
+      $('.filterInput').on('keyup', filterResults);
       $('#searchLocationsButton').on('click', findLocations);
     });
 
     function filterResults(){
-      var filterText = $('#filterInput').val();
-      $('.filterable').children(".list-group-item").each(function(){
-        if($(this).find('h4').text().toLowerCase().indexOf(filterText.toLowerCase()) > -1){
+      var filterText = $('.filterInput').val();
+      $('.filterable').children(".filter-item").each(function(){
+        if($(this).find('.search').html().toLowerCase().indexOf(filterText.toLowerCase()) > -1){
           $(this).show();
         }else{
           $(this).hide();
@@ -88,14 +83,14 @@
       search = encodeURIComponent(search);
       $('#locationInput').val('');
       $.ajax({
-        url: 'searchLocations/' + search,
+        url: '{{id}}/searchLocations/' + search,
         type: 'POST',
         success: function(result) {
           //add results to locations-to-add
           var resultsHTML = "";
 
           result.items.forEach(function(item){
-            resultsHTML += '<div class="checkbox"><label><input type="checkbox" value=\'' + JSON.stringify(item) + '\' name="' + item._id + '">' + item.name + '</label></div>';
+            resultsHTML += '<div class="checkbox filter-item"><label class="search"><input type="checkbox" value=\'' + JSON.stringify(item) + '\' name="' + item._id + '">' + item.name + '</label></div>';
           });
           $('#locations-to-add').html(resultsHTML);
         }

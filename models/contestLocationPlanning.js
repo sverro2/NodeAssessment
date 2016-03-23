@@ -19,6 +19,21 @@ function init(mongoose){
 		this.update({_id: planningId}, { $addToSet: { route: { $each: locationObjectsArray } } }, cb);
   }
 
+	contestLocationPlanning.statics.getLocations = function(planningId, cb){
+		this.findOne({ '_id': planningId }, 'route', function(err, planning){
+			if(err){
+				console.log("An error occured" + err);
+			}
+			if(cb){
+				cb(planning);
+			}
+		});
+  }
+
+	contestLocationPlanning.statics.deleteLocation = function(planningId, locationId, cb){
+		this.update({_id: planningId}, { $pull: { route: locationId  } }, cb);
+  }
+
 	mongoose.model('ContestLocationPlanning', contestLocationPlanning);
 }
 
