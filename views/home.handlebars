@@ -1,8 +1,8 @@
 <h1>{{title}}</h1>
 
 <ul id="messages"></ul>
-<form action="">
-    <input id="m" autocomplete="off" /><button>Send</button>
+<form action="" class="io">
+    <input class="io" id="m" autocomplete="off" /><button class="io">Send</button>
 </form>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -18,4 +18,3 @@
         $('#messages').append($('<li>').text(msg));
       });
 </script>
-

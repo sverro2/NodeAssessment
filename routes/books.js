@@ -5,17 +5,6 @@ var _ = require('underscore');
 var handleError;
 var async = require('async');
 
-/*
-	TODO:
-	- QueryString filter: topCategories={nummer}
-		Tel alle boeken in een categorie
-		Order deze categorie van meeste naar minste boeken
-		Geef alleen de boeken terug die in de top {nummer} categorieën voorkomen
-		(For now: Een boek kan maar 1 categorie hebben)
-
-	// Ten slotte, een moeilijkere (door Async methodes)
-	- Population: Vul alle autors van het boek
-*/
 function getBooks(req, res){
 	var query = Book.find();
 
@@ -30,7 +19,6 @@ function getBooks(req, res){
 	if(req.params.id){
 		data = data[0];
 	}
-
 }
 
 // Routing
