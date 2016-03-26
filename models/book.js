@@ -22,7 +22,7 @@ function init(mongoose){
 			}
 		},
 		category: {type: String, required: true},
-		chapters: {type: [{title: {type: String}, numberOfPages: {type: Number}}]},
+		chapters: {type: [{title: {type: String}, numberOfPages: {type: Number}}]}
 	});
 
 	book.virtual('totalNumberOfPages').get(function () {
