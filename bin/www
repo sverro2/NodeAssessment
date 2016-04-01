@@ -22,7 +22,8 @@ app.set('port', port);
 var server = http.Server(app);
 
 /* Socket.io */
-    app.io = require("../socket")(server);
+    app.io = require("../socket").init(server);
+    //app.use(app.io.checkIn());
 /* / Socket.io*/
 
 /**

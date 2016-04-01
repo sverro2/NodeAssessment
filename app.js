@@ -37,7 +37,7 @@ function handleError(req, res, statusCode, message){
 };
 
 // Routes
-var routes = require('./routes/index')(request, GLOBAL_VARS);
+var routes = require('./routes/index')(request, GLOBAL_VARS, mongoose);
 var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
 var books = require('./routes/books')(mongoose, handleError);
 // /Routes
