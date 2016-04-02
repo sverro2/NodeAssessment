@@ -3,7 +3,7 @@
 
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        <a href="/auth/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
 
     <div class="row">
@@ -21,9 +21,9 @@
                     <strong>password</strong>: {{ user.local.password }}
                 </p>
 
-                <a href="/unlink/local" class="btn btn-default">Unlink</a>
+                <button data-url="/auth/local" class="btn removeOnClick" data-refresh="true">Unlink</button>
             {{else}}
-                <a href="/connect/local" class="btn btn-default">Connect Local</a>
+                <a href="/auth/local/addition" class="btn btn-default">Connect Local</a>
             {{/if}}
 
         </div>
@@ -42,10 +42,9 @@
                     <strong>email</strong>: {{ user.facebook.email }}<br>
                     <strong>name</strong>: {{ user.facebook.name }}<br>
                 </p>
-
-                <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+                <button data-url="/auth/facebook" class="btn btn-primary removeOnClick" data-refresh="true">Unlink</button>
             {{else}}
-                <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
+                <a href="/auth/facebook" class="btn btn-primary">Connect Facebook</a>
             {{/if}}
 
         </div>
@@ -68,9 +67,9 @@
                     <strong>name</strong>: {{ user.google.name }}
                 </p>
 
-                <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+                <button data-url="/auth/google" class="btn btn-danger removeOnClick" data-refresh="true">Unlink</button>
             {{else}}
-                <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+                <a href="/auth/google" class="btn btn-danger">Connect Google</a>
             {{/if}}
 
         </div>
