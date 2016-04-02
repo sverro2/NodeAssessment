@@ -37,12 +37,12 @@ function init(mongoose) {
     
     contest.statics.addContest = function (contestObject, cb) {
         var data = new this(contestObject);
-        data.save(function (err, visit) {
+        data.save(function (err, contest) {
             if (err) {
                 console.log("An error occured" + err);
             }
             if (cb) {
-                cb(err);
+                cb(contest);
             }
         });
     }

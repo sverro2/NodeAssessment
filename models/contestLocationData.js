@@ -16,7 +16,7 @@ function init(mongoose) {
                 console.log("An error occured" + err);
             }
             if (cb) {
-                cb(err);
+                cb(visit);
             }
         });
     }

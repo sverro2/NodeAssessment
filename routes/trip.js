@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var request, places_key, Trip, Visit, User;
+var request, places_key, Contest, Trip, Visit, User;
 var async = require('async');
 var socket = require('../socket').init();
 
@@ -157,9 +157,15 @@ router.post('/:id/locations/:locationId/visits', socket.checkIn(), function(req,
             user: User._id,
             time: new Date()
         };
-        Visit.addVisit(visitObject, function(err){
+        Visit.addVisit(visitObject, function(result, err){
             if(err){
                 console.log("An error occured while submitting a visit to the database: " + err);
+            }else{
+                Contest.addVisit("56fd8d419c877dbc30000bf2", result._id, function(err){
+                    if(err){
+                        console.log("An error occured while submitting a visit to a contest: " + err);
+                    }
+                });
             }
         });
         res.redirect('/planner');
@@ -221,6 +227,7 @@ function addItemToReturnObject(item, returnObject, addedLocations){
 module.exports = function (req, GLOBAL_VARS, mongoose, user){
     request = req;
     places_key = GLOBAL_VARS.google_places_api_key;
+    Contest = mongoose.model('Contest');
     Trip = mongoose.model('ContestLocationPlanning');
     Visit = mongoose.model('ContestLocationData');
     User = user;
