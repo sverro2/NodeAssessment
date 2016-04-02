@@ -187,7 +187,6 @@ router.get('/unlink/google', function(req, res) {
 }
 // Export
 module.exports = function (pass, usr){
-  console.log("We zijn nu hier: " + pass);
   passport = pass;
   user = usr;
   init();
