@@ -77,8 +77,8 @@ app.use(passport.session()); // persistent login sessions
 app.use(user.middleware());
 
 // Routes
-var routes = require('./routes/index')(passport, user);
-var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
+var routes = require('./routes/index')(passport, user, mongoose);
+var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
 var books = require('./routes/books')(mongoose, handleError);
 
 app.use('/', routes);

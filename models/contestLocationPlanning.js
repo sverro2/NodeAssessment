@@ -33,6 +33,17 @@ function init(mongoose){
 			}
 		});
   }
+  
+  contestLocationPlanning.statics.getLocation = function(planningId, locationId, cb){
+    this.findOne({ '_id': planningId }, {'route': {$elemMatch: {'_id': locationId}}}, function(err, planning){
+			if(err){
+				console.log("An error occured" + err);
+			}
+			if(cb){
+				cb(planning);
+			}
+		});
+  }
 
 	mongoose.model('ContestLocationPlanning', contestLocationPlanning);
 }

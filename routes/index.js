@@ -1,16 +1,85 @@
 var express = require('express');
 var router = express.Router();
-var passport, user;
+var passport, user, Contest, Trip;
 
 function init(){
-/* Returns a package with some values to assert correct implementation of test frameworks */
-router.get('/test', function (req, res) {
-    var toReturn = {
-        intje: 42,
-        stringetje: "Haha cool, blijkbaar werkt het"
-    };
-    res.json(toReturn);
+// Contest CRUD
+router.get('/contest', function (req, res, next) {
+    Contest.find().select('name description startDate endDate').exec(function (err, contestData) {
+        if (err) {
+            res.render('home', {
+                title: 'Kroegentochten'
+            });
+        } else {
+            res.render('home', {
+                title: 'Kroegentochten',
+                contests: contestData
+            });
+        }
+    });
 });
+
+router.post('/contest', function (req, res) {
+    var contest = new Contest({
+        name: req.body.contestName,
+        description: req.body.contestDescription,
+        startDate: new Date(),
+        endDate: new Date()
+    });
+    contest.save(function (err) {
+        if (err) {
+            res.redirect('./new-contest');
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+router.get('/new-contest', function (req, res) {
+    res.render('trip/contestmaker', { title: 'Nieuwe tocht' });
+});
+
+router.get('/contest/:id', function (req, res) {
+    var contest = req.params.id;
+    Contest.findOne({_id: contest}).exec(function(err, contestData){
+      if(err){
+        res.redirect('/planner');
+      }else{
+        res.render('./trip/contestmaker', {
+          title: 'Bewerk Tocht',
+          id: contestData._id,
+          name: contestData.name,
+          description: contestData.description,
+          planning: contestData.contestLocationPlanning});
+      }
+    });
+});
+
+router.put('/contest/:id/planning/', function (req, res) {
+    Contest.addLocation(req.params.id, req.body.planning, function(err){
+        if(err){
+            console.log("An error occured while adding locations to the database: " + err);
+        }
+    })
+});
+
+router.delete('/contest/:id', function (req, res) {
+    Contest.remove({ _id: req.params.id }, function (err) {
+        if (err) {
+            res.status(300)
+        }
+    });
+});
+
+router.get('/searchPlanning', function(req,res){
+    Trip.find().select('name').exec(function(err, tripData){
+        if(err){
+            console.log('An error occured while fetching the planninglist: ' + err)
+        };
+        res.json(tripData);
+    });
+})
+// / Contest CRUD
 
 //loginroutes
 // =====================================
@@ -186,9 +255,11 @@ router.get('/unlink/google', function(req, res) {
 });
 }
 // Export
-module.exports = function (pass, usr){
-  passport = pass;
-  user = usr;
-  init();
-	return router;
+module.exports = function (pass, usr, mongoose){
+    passport = pass;
+    user = usr;
+    Contest = mongoose.model("Contest");
+    Trip = mongoose.model("ContestLocationPlanning");
+    init();
+    return router;
 };
