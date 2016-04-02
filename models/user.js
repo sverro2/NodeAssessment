@@ -20,7 +20,7 @@ function init(mongoose){
       email        : String,
       name         : String
     },
-    roles          : [String]
+    role          : String
 
   });
 

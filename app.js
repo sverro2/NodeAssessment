@@ -1,12 +1,16 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
+var flash   = require('connect-flash');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var exphbs  = require('express-handlebars');
 var request = require('request');
+var session = require('express-session');
+var passport = require('passport');
+var ConnectRoles = require('connect-roles');
 
 var GLOBAL_VARS = {
   google_places_api_key: "AIzaSyAdex7lYIUaHxMyYzVBcpYWieNaCJc_PRM"
@@ -14,7 +18,20 @@ var GLOBAL_VARS = {
 
 // Data Access Layer
 mongoose.connect('mongodb://admin:wachtwoord@ds015879.mlab.com:15879/node-assessment');
-// /Data Access Layer
+
+var user = new ConnectRoles({
+  failureHandler: function (req, res, action) {
+    // optional function to customise code that runs when
+    // user fails authorisation
+    var accept = req.headers.accept || '';
+    res.status(403);
+    if (~accept.indexOf('html')) {
+      res.render('access-denied', {action: action});
+    } else {
+      res.send('Access Denied - You don\'t have permission to: ' + action);
+    }
+  }
+});
 
 // Models
 require('./models/book')(mongoose);
@@ -23,7 +40,9 @@ require('./models/contestLocationData')(mongoose);
 require('./models/contest')(mongoose);
 require('./models/user')(mongoose);
 require('./models/fillTestData')(mongoose);
-// /Models
+
+//passport config
+require('./config/passport')(passport, mongoose); // pass passport for configuration
 
 function handleError(req, res, statusCode, message){
     console.log();
@@ -36,14 +55,7 @@ function handleError(req, res, statusCode, message){
     res.json(message);
 };
 
-// Routes
-var routes = require('./routes/index')(request, GLOBAL_VARS);
-var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
-var books = require('./routes/books')(mongoose, handleError);
-// /Routes
-
 var app = express();
-
 
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -56,10 +68,44 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// required for passport
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(user.middleware());
+
+// Routes
+var routes = require('./routes/index')(passport, user);
+var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
+var books = require('./routes/books')(mongoose, handleError);
 
 app.use('/', routes);
 app.use('/books', books);
 app.use('/planner', planner);
+//anonymous users can only access the home page
+//returning false stops any more rules from being
+//considered
+user.use(function (req, action) {
+  if (!req.isAuthenticated()) return action === 'access home page';
+})
+
+//moderator users can access private page, but
+//they might not be the only ones so we don't return
+//false if the user isn't a moderator
+user.use('player', function (req) {
+  if (req.user.role === 'player') {
+    return true;
+  }
+})
+
+//admin users can access all pages
+user.use(function (req) {
+  if (req.user.role === 'admin') {
+    return true;
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -93,6 +139,8 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+console.log("Je zou zeggen dat passport: " + passport + " en user " + user);
 
 
 module.exports = app;
