@@ -4,7 +4,7 @@ function init(mongoose) {
     var Schema = mongoose.Schema;
     var DateAfterTodayChecker = {
         validator: function (v) {
-            return v < new Date();
+            return v => new Date();
         }, message: '{VALUE} is not a date before today'
     }
 

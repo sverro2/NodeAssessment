@@ -80,10 +80,12 @@ app.use(user.middleware());
 var routes = require('./routes/index')(passport, user, mongoose);
 var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
 var books = require('./routes/books')(mongoose, handleError);
+var contest = require('./routes/contest')(user, mongoose)
 
 app.use('/', routes);
 app.use('/books', books);
 app.use('/planner', planner);
+app.use('/contest', contest);
 //anonymous users can only access the home page
 //returning false stops any more rules from being
 //considered

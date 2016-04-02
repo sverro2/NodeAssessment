@@ -150,36 +150,6 @@ router.post('/:id/searchLocations/:key', function(req, res){
 });
 
 // Location check-in
-router.post('/:id/locations/:locationId/visits', socket.checkIn(), function(req,res) {
-    Trip.getLocation(req.params.id, req.params.locationId, function(location){
-        var visitObject = {
-            location: location.route[0].name,
-            user: User._id,
-            time: new Date()
-        };
-        Visit.addVisit(visitObject, function(result, err){
-            if(err){
-                console.log("An error occured while submitting a visit to the database: " + err);
-            }else{
-                Contest.addVisit("56fd8d419c877dbc30000bf2", result._id, function(err){
-                    if(err){
-                        console.log("An error occured while submitting a visit to a contest: " + err);
-                    }
-                });
-            }
-        });
-        res.redirect('/planner');
-    });
-});
-
-router.get('/:id/locations/:locationId/visits', function (req,res){
-    var trip = req.params.id;
-    var location = req.params.locationId;
-    
-    // TODO: Locatie ophalen (Plus visits)
-    
-});
-
 router.get('/:id/visits', function (req, res) {
     var trip = req.params.id;
     Trip.findOne({_id: trip}).exec(function(err, tripData){

@@ -1,9 +1,22 @@
+var socket = io();
+
 $(document).ready(function () {
+    socket.on('userCheckin', function (msg) {
+        $('#messages').html($('<span>').text(msg));
+    });
+
+    $("#startDate").datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+    $("#endDate").datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+
     $('.filterButton').on('click', filterResults);
     $('.removeOnClick').on('click', deleteRequest);
     $('.filterInput').on('keyup', filterResults);
     $('#searchLocationsButton').on('click', findLocations);
-    
+
     $('.checkinOnClick').on('click', checkInRequest);
     $('#planning-to-add').on('click', '.addPlanningOnClick', addPlanningRequest);
     findPlanning();
@@ -71,7 +84,19 @@ function findPlanning() {
 }
 
 function addPlanningRequest() {
-    console.log("heya puddin!");
+    var clickedButton = $(this);
+    var url = clickedButton.data('url');
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {
+            planning: $(this).attr('id')
+        },
+        success: function () {
+            //$('#planning-to-add').hide();
+            console.log("yesssssss!");
+        }
+    });
 }
 
 function checkInRequest() {
