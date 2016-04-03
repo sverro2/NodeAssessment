@@ -19,11 +19,16 @@ function filterResults(){
 function deleteRequest(){
   var $clickedButton = $(this);
   var urlToDelete = $clickedButton.data('url');
+  var refresh = ($clickedButton.attr('data-refresh'))
+
   $.ajax({
     url: urlToDelete,
     type: 'DELETE',
     success: function(result) {
       $clickedButton.closest('.list-group-item').hide();
+      if(refresh){
+        location.reload(true);
+      }
     }
   });
 }
