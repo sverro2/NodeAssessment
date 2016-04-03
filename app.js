@@ -75,12 +75,15 @@ app.use(passport.session()); // persistent login sessions
 app.use(user.middleware());
 
 // Routes
-var index = require('./routes/index')(user);
-var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
+
+var index = require('./routes/index')(user, mongoose);
+var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
 var auth = require('./routes/login')(passport);
+var contest = require('./routes/contest')(user, mongoose)
 
 app.use('/', index);
 app.use('/planner', planner);
+app.use('/contest', contest);
 app.use('/auth', auth);
 
 //anonymous users can only access the home page

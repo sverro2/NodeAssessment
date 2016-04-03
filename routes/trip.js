@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var request, places_key, Trip;
+var request, places_key, Contest, Trip, Visit, User;
 var async = require('async');
+var socket = require('../socket').init();
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -148,6 +149,24 @@ router.post('/:id/searchLocations/:key', function(req, res){
   });
 });
 
+// Location check-in
+router.get('/:id/visits', function (req, res) {
+    var trip = req.params.id;
+    Trip.findOne({_id: trip}).exec(function(err, tripData){
+      if(err){
+        res.redirect('/planner');
+      }else{
+        res.render('./trip/checkin', {
+          title: 'Bewerk Trip: check-in',
+          id: tripData._id,
+          name: tripData.name,
+          description: tripData.description,
+          route: tripData.route});
+      }
+    });
+});
+// / Location check-in
+
 //only adds item to the list when not already added to planning or the list itself
 function addItemToReturnObject(item, returnObject, addedLocations){
   var exists;
@@ -175,9 +194,12 @@ function addItemToReturnObject(item, returnObject, addedLocations){
 }
 
 // Export
-module.exports = function (req, GLOBAL_VARS, mongoose){
-  request = req;
-  places_key = GLOBAL_VARS.google_places_api_key;
-  Trip = mongoose.model('ContestLocationPlanning');
-	return router;
+module.exports = function (req, GLOBAL_VARS, mongoose, user){
+    request = req;
+    places_key = GLOBAL_VARS.google_places_api_key;
+    Contest = mongoose.model('Contest');
+    Trip = mongoose.model('ContestLocationPlanning');
+    Visit = mongoose.model('ContestLocationData');
+    User = user;
+    return router;
 };
