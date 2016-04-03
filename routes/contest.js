@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var passport, user, Contest, Trip, Visit;
+var user, Contest, Trip, Visit;
 var socket = require('../socket').init();
 
 // Contest CRUD
@@ -101,9 +101,9 @@ router.post('/:contestId/planner/:planningId/locations/:locationId/visits', sock
 router.get('/:contestId/planner/:planningId/locations/:locationId/visits', function (req,res){
     var trip = req.params.planningId;
     var location = req.params.locationId;
-    
+
     // TODO: Locatie ophalen (Plus visits)
-    
+
 });
 // / Location check-in
 

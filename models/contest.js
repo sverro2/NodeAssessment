@@ -4,7 +4,7 @@ function init(mongoose) {
     var Schema = mongoose.Schema;
     var DateAfterTodayChecker = {
         validator: function (v) {
-            return v => new Date();
+            return v >= new Date();
         }, message: '{VALUE} is not a date before today'
     }
 
@@ -34,7 +34,7 @@ function init(mongoose) {
         }
     });
     //contest.set('toJSON', { virtuals: true });
-    
+
     contest.statics.addContest = function (contestObject, cb) {
         var data = new this(contestObject);
         data.save(function (err, contest) {
