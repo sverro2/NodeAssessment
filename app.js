@@ -77,13 +77,14 @@ app.use(passport.session()); // persistent login sessions
 app.use(user.middleware());
 
 // Routes
-var routes = require('./routes/index')(passport, user);
+var index = require('./routes/index')(user);
 var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose);
-var books = require('./routes/books')(mongoose, handleError);
+var auth = require('./routes/login')(passport);
 
-app.use('/', routes);
-app.use('/books', books);
+app.use('/', index);
 app.use('/planner', planner);
+app.use('/auth', auth);
+
 //anonymous users can only access the home page
 //returning false stops any more rules from being
 //considered
@@ -139,8 +140,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-console.log("Je zou zeggen dat passport: " + passport + " en user " + user);
-
 
 module.exports = app;
