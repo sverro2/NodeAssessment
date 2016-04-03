@@ -34,12 +34,10 @@ var user = new ConnectRoles({
 });
 
 // Models
-require('./models/book')(mongoose);
 require('./models/contestLocationPlanning')(mongoose);
 require('./models/contestLocationData')(mongoose);
 require('./models/contest')(mongoose);
 require('./models/user')(mongoose);
-require('./models/fillTestData')(mongoose);
 
 //passport config
 require('./config/passport')(passport, mongoose); // pass passport for configuration
