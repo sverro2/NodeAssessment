@@ -78,9 +78,9 @@ app.use(user.middleware());
 
 // Routes
 var routes = require('./routes/index')(passport, user, mongoose);
+var contest = require('./routes/contest')(passport, user, mongoose);
 var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
 var books = require('./routes/books')(mongoose, handleError);
-var contest = require('./routes/contest')(user, mongoose)
 
 app.use('/', routes);
 app.use('/books', books);

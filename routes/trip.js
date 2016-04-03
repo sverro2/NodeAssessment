@@ -150,7 +150,7 @@ router.post('/:id/searchLocations/:key', function(req, res){
 });
 
 // Location check-in
-router.get('/:id/visits', function (req, res) {
+/*router.get('/:id/visits', function (req, res) {
     var trip = req.params.id;
     Trip.findOne({_id: trip}).exec(function(err, tripData){
       if(err){
@@ -164,7 +164,7 @@ router.get('/:id/visits', function (req, res) {
           route: tripData.route});
       }
     });
-});
+});*/
 // / Location check-in
 
 //only adds item to the list when not already added to planning or the list itself

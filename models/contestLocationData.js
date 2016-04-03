@@ -5,7 +5,7 @@ function init(mongoose) {
 
     var contestLocationData = new Schema({
         location: { type: String, required: true },
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
         time: { type: Date, required: true }
     });
 

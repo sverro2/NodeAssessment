@@ -3,6 +3,26 @@
         <div class="panel-heading">
             <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        Basic Contest Information</a>
+      </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form>
+                    <fieldset class="form-group">
+                        <label for="contestName">The contest's Name </label>
+                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour 2016!" value="{{name}}" name="contestName" disabled>
+                    </fieldset>
+                    <input type="hidden" name="contestId" value="{{id}}" />
+                    <input type="hidden" id="userName" name="userName" value="{{userName}}" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
         Basic Trip Information</a>
       </h4>
         </div>
@@ -11,13 +31,9 @@
                 <form>
                     <fieldset class="form-group">
                         <label for="tripName">The trip's Name </label>
-                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{name}}" name="tripName" disabled>
+                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{trip.name}}" name="tripName" disabled>
                     </fieldset>
-                    <fieldset class="form-group">
-                        <label for="tripDescription">Description</label>
-                        <textarea name="tripDescription" class="form-control" rows="5" placeholder="Description of your trip..." disabled>{{description}}</textarea>
-                    </fieldset>
-                    <input type="hidden" name="tripId" value="{{id}}" />
+                    <input type="hidden" name="tripId" value="{{trip._id}}" />
                 </form>
             </div>
         </div>
@@ -31,7 +47,7 @@
 
         <div class="panel-body">
             <div class="list-group filterable">
-                {{#each route}}
+                {{#each trip.route}}
                     <div class="list-group-item filter-item">
                         <div class="input-group">
                             <h4 class="search">{{name}}</h4>
@@ -66,5 +82,21 @@
     var socket = io();
     socket.on('userCheckin', function(msg){
         $('#messages').html($('<span>').text(msg));
+    });
+    $('.checkinOnClick').on('click', function() {
+        console.log("check");
+        var clickedButton = $(this);
+        var url = clickedButton.data('url');
+        var location = $(this).attr("id");
+        var user = $("#userName").attr("value");
+        $.ajax({
+            url: url,
+            type: 'POST',
+            success: function() {
+                console.log(user);
+                socket.emit('userCheckin', user, location); 
+                return false;
+            }
+        });
     });
 </script>

@@ -1,10 +1,6 @@
-var socket = io();
+//var socket = io();
 
 $(document).ready(function() {
-    socket.on('userCheckin', function(msg) {
-        $('#messages').html($('<span>').text(msg));
-    });
-
     $("#startDate").datepicker({
         dateFormat: "yy-mm-dd"
     });
@@ -101,6 +97,7 @@ function addPlanningRequest() {
 }
 
 function checkInRequest() {
+    console.log("check");
     var clickedButton = $(this);
     var url = clickedButton.data('url');
     var location = $(this).attr("id");
