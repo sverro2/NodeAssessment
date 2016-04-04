@@ -1,5 +1,7 @@
 function init(mongoose) {
     console.log('Iniializing contest schema');
+    var ValidationError = mongoose.Error.ValidationError;
+    var ValidatorError  = mongoose.Error.ValidatorError;
 
     var Schema = mongoose.Schema;
     var DateAfterTodayChecker = {
@@ -21,9 +23,10 @@ function init(mongoose) {
             required: true,
             validate: DateAfterTodayChecker
         },
-        contestLocationPlanning: { type: Schema.Types.ObjectId, ref: 'ContestLocationPlanning' },
-        locationVisits: { type: [{ type: Schema.Types.ObjectId, ref: 'ContestLocationData' }] },
-        winner: { type: Schema.Types.ObjectId, ref: 'User', required: false }
+        contestLocationPlanning: { type: Schema.Types.ObjectId, ref: 'ContestLocationPlanning', required: false},
+        locationVisits: { type: [{ type: Schema.Types.ObjectId, ref: 'ContestLocationData' }], required: false },
+        winner: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+        players: { type: [{ type: Schema.Types.ObjectId, ref: 'User' }], required: false }
     });
 
     contest.pre('validate', function (next) {
