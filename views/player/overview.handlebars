@@ -1,0 +1,29 @@
+<h1>{{title}}</h1>
+
+<div class="row">
+  <div class="input-group">
+    <input type="text" class="form-control filterInput" placeholder="Filter trips...">
+    <span class="input-group-btn">
+      <button class="btn btn-secondary" type="button" class="filterButton">Filter!</button>
+    </span>
+  </div>
+</div>
+
+<div class="row top-buffer">
+  <div class="list-group filterable">
+    {{#each contests}}
+    <div class="list-group-item filter-item">
+      <div class="input-group">
+        <h4 class="search">{{name}}</h4>
+        <span class="input-group-btn">
+          <button data-url="contest/{{_id}}" class="btn btn-primary">{{status}}</button>
+          <button data-url="{{../playerId}}/contests/{{_id}}" class="btn btn-danger removeOnClick">Unsubscribe</button>
+        </span>
+      </div>
+      <span>{{description}}<br>
+            Start: {{startDate}}
+            Eindigt: {{endDate}}</span>
+    </div>
+    {{/each}}
+</div>
+<a href="{{playerId}}/contests" class="btn btn-primary pull-right btn-lg">Subscribe to Another Contest</a>

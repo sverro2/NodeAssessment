@@ -42,6 +42,9 @@ require('./models/user')(mongoose);
 //passport config
 require('./config/passport')(passport, mongoose); // pass passport for configuration
 
+// start service
+require('./config/timedService')(mongoose); // pass passport for configuration
+
 function handleError(req, res, statusCode, message){
     console.log();
     console.log('-------- Error handled --------');
@@ -77,14 +80,16 @@ app.use(user.middleware());
 // Routes
 
 var index = require('./routes/index')(user, mongoose);
-var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
 var auth = require('./routes/login')(passport);
 var contest = require('./routes/contest')(user, mongoose)
+var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
+var player = require('./routes/player')(user, mongoose)
 
 app.use('/', index);
-app.use('/planner', planner);
-app.use('/contest', contest);
 app.use('/auth', auth);
+app.use('/contest', contest);
+app.use('/planner', planner);
+app.use('/player', player);
 
 //anonymous users can only access the home page
 //returning false stops any more rules from being
