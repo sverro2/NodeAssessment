@@ -10,7 +10,7 @@ function startTimer(){
 
 function testFunction(){
   //print serviceData values you want to test to the console
-  console.log("Test timer: " + serviceData.test++);
+  //console.log("Test timer: " + serviceData.test++);
 }
 
 // expose this function to our app using module.exports

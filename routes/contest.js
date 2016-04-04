@@ -191,7 +191,6 @@ function init() {
 // Export
 module.exports = function(usr, mongoose) {
     user = usr;
-    console.log(user);
     Contest = mongoose.model("Contest");
     Trip = mongoose.model("ContestLocationPlanning");
     Visit = mongoose.model("ContestLocationData");

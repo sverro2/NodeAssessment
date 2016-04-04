@@ -1,0 +1,47 @@
+
+    <h4>
+        Personal status:
+    </h4>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                {{contest.name}}
+            </h4>
+        </div>
+
+        <div class="panel-body">
+            <div class="list-group filterable">
+                <h4 class="panel-title">
+                    Locations visited:
+                </h4>
+                {{#each locationsVisited}}
+                    <div class="list-group-item filter-item">
+                        <div class="input-group">
+                            <span>
+                                <b>{{this}}</b>
+                            </span>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="panel-body">
+            <div class="list-group filterable">
+                <h4 class="panel-title">
+                    Locations yet to visit:
+                </h4>
+                {{#each locationsToGo}}
+                    <div class="list-group-item filter-item">
+                        <div class="input-group">
+                            <h4 class="search">{{name}}</h4>
+                            <span class="input-group-btn">
+                                <button id="{{name}}" data-url="../../../contest/{{../contest._id}}/planner/{{../contest.contestLocationPlanning._id}}/locations/{{_id}}/visits" class="btn btn-success checkinOnClick">Check in</button>
+                            </span>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
