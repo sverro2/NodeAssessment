@@ -1,10 +1,6 @@
-var socket = io();
+//var socket = io();
 
-$(document).ready(function () {
-    socket.on('userCheckin', function (msg) {
-        $('#messages').html($('<span>').text(msg));
-    });
-
+$(document).ready(function() {
     $("#startDate").datepicker({
         dateFormat: "yy-mm-dd"
     });
@@ -24,7 +20,7 @@ $(document).ready(function () {
 
 function filterResults() {
     var filterText = $('.filterInput').val();
-    $('.filterable').children(".filter-item").each(function () {
+    $('.filterable').children(".filter-item").each(function() {
         if ($(this).find('.search').html().toLowerCase().indexOf(filterText.toLowerCase()) > -1) {
             $(this).show();
         } else {
@@ -39,7 +35,8 @@ function deleteRequest() {
     $.ajax({
         url: urlToDelete,
         type: 'DELETE',
-        success: function (result) {
+        success: function(result) {
+            console.log("deleted!");
             $clickedButton.closest('.list-group-item').hide();
         }
     });
@@ -53,11 +50,11 @@ function findLocations() {
     $.ajax({
         url: baseUrl + search,
         type: 'POST',
-        success: function (result) {
+        success: function(result) {
             //add results to locations-to-add
             var resultsHTML = "";
 
-            result.items.forEach(function (item) {
+            result.items.forEach(function(item) {
                 resultsHTML += '<div class="checkbox filter-item"><label class="search"><input type="checkbox" value=\'' + JSON.stringify(item) + '\' name="' + item._id + '">' + item.name + '</label></div>';
             });
             $('#locations-to-add').html(resultsHTML);
@@ -70,10 +67,10 @@ function findPlanning() {
     $.ajax({
         url: '../searchPlanning',
         type: 'GET',
-        success: function (result) {
+        success: function(result) {
             var contestId = $('#contestId').val();
             var resultsHTML = "<div class='btn-group'>";
-            result.forEach(function (item) {
+            result.forEach(function(item) {
                 resultsHTML += '<div class="list-group-item filter-item"><div class="input-group"><h4 class="search">' + item.name + '</h4><span class="input-group-btn"><button data-url="' + contestId + '/planning" class="btn btn-success addPlanningOnClick" json="JSON.stringify(item)" id="' + item._id + '">Add</button></div></div>';
                 //resultsHTML += '<div class="radio filter-item"><label class="search"><input type="radio" value=\'' + JSON.stringify(item) + '\' name="' + item._id + '">' + item.name + '</label></div>'
             });
@@ -99,6 +96,9 @@ function addPlanningRequest() {
             console.log("yesssssss!");
             if(serv){
               window.location.href =serv.url;
+            }else{
+              var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
+              $('#planning-to-add').html(successHtml);
             }
         }
       });
@@ -122,13 +122,14 @@ function deleteRequest(){
 }
 
 function checkInRequest() {
+    console.log("check");
     var clickedButton = $(this);
     var url = clickedButton.data('url');
     var location = $(this).attr("id");
     $.ajax({
         url: url,
         type: 'POST',
-        success: function () {
+        success: function() {
             socket.emit('userCheckin', "rik", location); // user is nu nog hardcoded...
             return false;
         }

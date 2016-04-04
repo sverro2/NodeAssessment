@@ -78,7 +78,6 @@ app.use(passport.session()); // persistent login sessions
 app.use(user.middleware());
 
 // Routes
-
 var index = require('./routes/index')(user, mongoose);
 var auth = require('./routes/login')(passport);
 var contest = require('./routes/contest')(user, mongoose)

@@ -1,47 +1,47 @@
 <div class="panel-group" id="accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        Basic contest Information
-      </h4>
-    </div>
-      <div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                Basic contest Information
+            </h4>
+        </div>
+    <div class="panel-body">
         {{#if id}}
-            <form action="constest/{{id}}" autocomplete="off" method="PUT">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Add route
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" id="contestId" name="contestId" value="{{id}}" />
+                    <div id="planning-to-add" class="filterable top-buffer">
+                </div>
+                <!--<button data-url="{{id}}/planning" class="btn btn-primary top-buffer pull-right addPlanningOnClick" data-token="">Add Selected</button>-->
+            </div>
+        </div>
         {{else}}
-            <form action="contest" autocomplete="off" method="POST">
-        {{/if}}
-              <fieldset class="form-group">
-                <label for="contestName">The contest's Name </label>
-                <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{name}}" name="contestName">
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="contestDescription">Description</label>
-                <textarea name="contestDescription" class="form-control" rows="5" placeholder="Description of your contest...">{{description}}</textarea>
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="contestStartDate">Starts</label>
-                <input type="text" class="form-control" placeholder="30-03-2016" value="{{startDate}}" name="contestStartDate">
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="contestEndDate">Ends</label>
-                <input type="text" class="form-control" placeholder="31-03-2016" value="{{endDate}}" name="contestEndDate">
-              </fieldset>
-              <input type="hidden" id="contestId" name="contestId" value="{{id}}" />
-              <button type="submit" class="btn btn-primary pull-right">Submit</button>
+            <form action="./" autocomplete="off" method="POST">
+                <fieldset class="form-group">
+                    <label for="contestName">The contest's Name </label>
+                    <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{name}}" name="contestName" required="true">
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="contestDescription">Description</label>
+                    <textarea name="contestDescription" class="form-control" rows="5" placeholder="Description of your contest...">{{description}}</textarea>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="contestStartDate">Starts</label>
+                    <input id='startDate' type="text" class="form-control" placeholder="30-03-2016" value="{{startDate}}" name="contestStartDate" required="true">
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="contestEndDate">Ends</label>
+                    <input id='endDate' type="text" class="form-control" placeholder="31-03-2016" value="{{endDate}}" name="contestEndDate" required="true">
+                </fieldset>
+                <button type="submit" class="btn btn-primary pull-right">Submit</button>
             </form>
-      </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-          Add route
-      </h4>
+        {{/if}}
+        </div>
     </div>
-      <div class="panel-body">
-          <div id="planning-to-add" class="filterable top-buffer">
-          </div>
-          <!--<button data-url="{{id}}/planning" class="btn btn-primary top-buffer pull-right addPlanningOnClick" data-token="">Add Selected</button>-->
-      </div>
-  </div>
 </div>
+

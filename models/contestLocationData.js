@@ -4,8 +4,9 @@ function init(mongoose) {
     var Schema = mongoose.Schema;
 
     var contestLocationData = new Schema({
+        _contest: { type: Schema.Types.ObjectId, ref: 'Contest'},
         location: { type: String, required: true },
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
         time: { type: Date, required: true }
     });
 

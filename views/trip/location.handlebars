@@ -1,0 +1,59 @@
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        Basic Contest Information</a>
+      </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form>
+                    <fieldset class="form-group">
+                        <label for="contestName">The contest's Name </label>
+                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour 2016!" value="{{contest}}" name="contestName" disabled>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        Basic Trip Information</a>
+      </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form>
+                    <fieldset class="form-group">
+                        <label for="tripName">The trip's Name </label>
+                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{planning}}" name="tripName" disabled>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                {{location}}
+            </h4>
+        </div>
+
+        <div class="panel-body">
+            <div class="list-group filterable">
+                {{#each visits}}
+                    <div class="list-group-item filter-item">
+                        <div class="input-group">
+                            <span>
+                                <b>{{user}}</b> visited this location on: <b>{{time}}</b>
+                            </span>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
