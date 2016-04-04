@@ -34,12 +34,10 @@ var user = new ConnectRoles({
 });
 
 // Models
-require('./models/book')(mongoose);
 require('./models/contestLocationPlanning')(mongoose);
 require('./models/contestLocationData')(mongoose);
 require('./models/contest')(mongoose);
 require('./models/user')(mongoose);
-require('./models/fillTestData')(mongoose);
 
 //passport config
 require('./config/passport')(passport, mongoose); // pass passport for configuration
@@ -77,15 +75,16 @@ app.use(passport.session()); // persistent login sessions
 app.use(user.middleware());
 
 // Routes
-var routes = require('./routes/index')(passport, user, mongoose);
-var contest = require('./routes/contest')(passport, user, mongoose);
+var index = require('./routes/index')(user, mongoose);
 var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
-var books = require('./routes/books')(mongoose, handleError);
+var auth = require('./routes/login')(passport);
+var contest = require('./routes/contest')(passport, user, mongoose)
 
-app.use('/', routes);
-app.use('/books', books);
+app.use('/', index);
 app.use('/planner', planner);
 app.use('/contest', contest);
+app.use('/auth', auth);
+
 //anonymous users can only access the home page
 //returning false stops any more rules from being
 //considered
@@ -141,8 +140,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-console.log("Je zou zeggen dat passport: " + passport + " en user " + user);
-
 
 module.exports = app;

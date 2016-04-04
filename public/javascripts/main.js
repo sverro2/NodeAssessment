@@ -93,7 +93,24 @@ function addPlanningRequest() {
             var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
             $('#planning-to-add').html(successHtml);
         }
-    });
+      });
+}
+
+function deleteRequest(){
+  var $clickedButton = $(this);
+  var urlToDelete = $clickedButton.data('url');
+  var refresh = ($clickedButton.attr('data-refresh'))
+
+  $.ajax({
+    url: urlToDelete,
+    type: 'DELETE',
+    success: function(result) {
+      $clickedButton.closest('.list-group-item').hide();
+      if(refresh){
+        location.reload(true);
+      }
+    }
+  });
 }
 
 function checkInRequest() {

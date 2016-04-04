@@ -35,10 +35,6 @@ function init(mongoose) {
         return bcrypt.compareSync(password, this.local.password);
     };
 
-    userSchema.methods.hasRole = function (roleToSearch) {
-        return this.roles.indexOf(roleToSearch) > -1
-    }
-
     userSchema.statics.getUser = function (userId, cb) {
         this.findOne({ '_id': userId }, 'route', function (err, user) {
             if (err) {

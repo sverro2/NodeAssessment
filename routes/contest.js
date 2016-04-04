@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var passport, user, Contest, Trip, Visit;
+var user, Contest, Trip, Visit;
 var socket = require('../socket').init();
 
 /*
@@ -178,8 +178,16 @@ function init() {
         });
     });
     // / Location check-in
-}
 
+    router.get('/:contestId/planner/:planningId/locations/:locationId/visits', function(req, res) {
+        var trip = req.params.planningId;
+        var location = req.params.locationId;
+
+        // TODO: Locatie ophalen (Plus visits)
+
+    });
+    // / Location check-in
+}
 // Export
 module.exports = function(pass, usr, mongoose) {
     passport = pass;

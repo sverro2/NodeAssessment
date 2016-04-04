@@ -170,8 +170,9 @@ module.exports = function(passport, mongoose) {
                               throw err;
                           return done(null, user);
                       });
+                  }else{
+                    return done(null, user); // user found, return that user
                   }
-                  return done(null, user); // user found, return that user
                 } else {
                   // if there is no user found with that facebook id, create them
                   var newUser            = new User();
@@ -246,9 +247,9 @@ module.exports = function(passport, mongoose) {
                               throw err;
                           return done(null, user);
                       });
+                  }else{
+                    return done(null, user);
                   }
-                  // if a user is found, log them in
-                  return done(null, user);
                 } else {
                   // if the user isnt in our database, create a new user
                   var newUser          = new User();
