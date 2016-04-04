@@ -51,7 +51,7 @@ function init(mongoose) {
     }
 
     contest.statics.addPlanning = function (contestId, planning, cb) {
-        this.update({ _id: contestId }, { $addToSet: { contestLocationPlanning: planning } }, cb); 
+        this.update({ _id: contestId }, { $set: { contestLocationPlanning: planning } }, cb); 
     }
 
     contest.statics.addVisit = function (contestId, visit, cb) {
