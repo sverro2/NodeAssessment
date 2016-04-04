@@ -16,7 +16,6 @@ function init(){
             });
         } else {
             contestOverview(contestData, req.params.playerId);
-            console.log(contestData);
             if(contestData.test){
               res.json(contestData);
             }else{
@@ -87,7 +86,53 @@ function init(){
       }
     );
   });
+
+  // Locaties per player per contest
+  router.get('/:playerId/contests/:contestId/', User.is('player') ,function(req,res){
+      var player = req.params.playerId;
+      var contest = req.params.contestId;
+
+      Contest.findOne({_id: contest}).populate('locationVisits contestLocationPlanning').exec(function(err, contestData){
+            var locationsVisited = [];
+            var locationsToGo = [];
+            var username = "An user";
+
+            for(var i = 0; i < contestData.locationVisits.length; i++){
+                if(contestData.locationVisits[i].user.toString() === player.toString()){
+                    locationsVisited.push(contestData.locationVisits[i].location);
+                }
+            }
+
+            for(var i = 0; i < contestData.contestLocationPlanning.route.length; i++){
+                if(locationsVisited.indexOf(contestData.contestLocationPlanning.route[i].name) < 0){
+                    locationsToGo.push(contestData.contestLocationPlanning.route[i]);
+                }
+            }
+
+            if (req.user.local.email) {
+                username = req.user.local.email;
+            }
+            if (req.user.google.name) {
+                username = req.user.google.name;
+            }
+            if (req.user.facebook.name) {
+                username = req.user.facebook.name;
+            }
+
+            if (err) {
+                res.render('player/overview');
+            } else {
+                res.render('player/contests-per-player', {
+                    userName: username,
+                    contest: contestData,
+                    locationsVisited: locationsVisited,
+                    locationsToGo : locationsToGo,
+                });
+            }
+      });
+  });
 }
+  // /Locaties per player per contest
 
 function contestOverview(contestData, playerId){
   for(var x = 0; x < contestData.length; x++){

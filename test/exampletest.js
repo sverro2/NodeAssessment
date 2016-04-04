@@ -151,16 +151,22 @@ var contestOverview = player.contestOverviewFunc;
 
 describe("Player", function () {
     /* Moet slagen */
-    it("Win / Lose / Running / Due correctly detected", function (done) {
+    it("Check if database request is hadled properly", function (done) {
         makeRequest('/player/playerId', 200, function (err, res) {
             if (err) { return done(err); }
-            contestOverview(playerOverview, "570170d30a7cd40913b59416");
-
-            console.log("stuff: " + JSON.stringify(playerOverview));
-            console.log(JSON.stringify(res.text));
-            console.log("body " + JSON.stringify(res.body))
             done();
         });
+    });
+
+    /* Moet slagen */
+    it("Win / Lose / Running / Due correctly detected", function (done) {
+        contestOverview(playerOverview, "570170d30a7cd40913b59416");
+        expect(playerOverview[0].status).to.equal("You Won!");
+        expect(playerOverview[1].status).to.equal("You Lost");
+        expect(playerOverview[2].status).to.equal("Due");
+        expect(playerOverview[3].status).to.equal("Due");
+        done();
+
     });
 });
 
@@ -209,5 +215,20 @@ var placesRequestResponse = {
  ]
 }
 
-var playerOverview = [{"_id":"570118b8528c58003a6957cd","name":"jhfdjkfhd","description":"grrgrge","startDate":"2016-04-04T00:00:00.000Z","endDate":"2016-04-09T00:00:00.000Z","winner":"570170d30a7cd40913b59416"},{"_id":"57011a5cc4efd5403a6a641e","name":"frff","description":"regtrgt","startDate":"2016-03-29T00:00:00.000Z","endDate":"2016-04-01T00:00:00.000Z"},
-{"_id":"57023760e66bacf5039823bd","name":"testContest5","description":"descripionTest","startDate":"2016-04-10T04:37:20.394Z","endDate":"2016-04-15T23:30:40.394Z"},{"_id":"5702351a1856ee252c086ada","name":"testContest2","description":"descripionTest","startDate":"2016-04-10T04:27:38.281Z","endDate":"2016-04-15T23:20:58.281Z","winner":"570170d30a8cd40913b59416"}];
+var playerOverview = [
+  {
+    "_id":"570118b8528c58003a6957cd","name":"jhfdjkfhd","description":"grrgrge",
+    "startDate":new Date("2016-04-04T00:00:00.000Z"),"endDate":new Date("2016-04-09T00:00:00.000Z"),"winner":"570170d30a7cd40913b59416"
+  },
+  {
+    "_id":"57011a5cc4efd5403a6a641e","name":"frff","description":"regtrgt",
+    "startDate":new Date("2016-03-29T00:00:00.000Z"),"endDate":new Date("2016-04-01T00:00:00.000Z")
+  },
+  {
+    "_id":"57023760e66bacf5039823bd","name":"testContest5","description":"descripionTest",
+    "startDate":new Date("2016-04-10T04:37:20.394Z"),"endDate":new Date("2016-04-15T23:30:40.394Z")
+  },
+  {
+    "_id":"5702351a1856ee252c086ada","name":"testContest2","description":"descripionTest",
+    "startDate":new Date("2016-04-10T04:27:38.281Z"),"endDate":new Date("2016-04-15T23:20:58.281Z"),"winner":"570170d30a8cd40913b59416"
+  }];
