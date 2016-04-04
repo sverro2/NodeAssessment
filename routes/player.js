@@ -107,13 +107,14 @@ function init(){
   
   
   // Locaties per player per contest
-  router.get('/:playerId/contests/:contestId/' ,function(req,res){
+  router.get('/:playerId/contests/:contestId/', User.is('player') ,function(req,res){
       var player = req.params.playerId;
       var contest = req.params.contestId;
       
       Contest.findOne({_id: contest}).populate('locationVisits contestLocationPlanning').exec(function(err, contestData){
             var locationsVisited = [];
             var locationsToGo = [];
+            var username = "An user";
             
             for(var i = 0; i < contestData.locationVisits.length; i++){
                 if(contestData.locationVisits[i].user.toString() === player.toString()){
@@ -127,11 +128,21 @@ function init(){
                 }
             }
             
+            if (req.user.local.email) {
+                username = req.user.local.email;
+            }
+            if (req.user.google.name) {
+                username = req.user.google.name;
+            }
+            if (req.user.facebook.name) {
+                username = req.user.facebook.name;
+            }
+            
             if (err) {
-                console.log("an error occurred: " + err);
+                res.render('player/overview');
             } else {
-                // TODO: compare locations visited and yet to visit for user
                 res.render('player/contests-per-player', {
+                    userName: username,
                     contest: contestData,
                     locationsVisited: locationsVisited,
                     locationsToGo : locationsToGo,
