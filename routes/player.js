@@ -16,12 +16,11 @@ function init(){
             });
         } else {
             contestOverview(contestData, req.params.playerId);
-              res.render('player/overview', {
-                title: 'Mijn Kroegentochten',
-                playerId: req.params.playerId,
-                contests: contestData
-              });
-            }
+            res.render('player/overview', {
+              title: 'Mijn Kroegentochten',
+              playerId: req.params.playerId,
+              contests: contestData
+            });
         }
     });
   });
