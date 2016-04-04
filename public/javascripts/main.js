@@ -93,7 +93,6 @@ function addPlanningRequest() {
         },
         success: function (serv) {
             //$('#planning-to-add').hide();
-            console.log("yesssssss!");
             if(serv){
               window.location.href =serv.url;
             }else{

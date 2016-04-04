@@ -40,7 +40,7 @@ function init(){
         status = "You Won!";
       }else if(contestData[x].startDate > currentDate){
         status = "Due";
-      }else if(contestData[x].endDate < currentDate){
+      }else if(contestData[x].endDate < currentDate || contestData[x].winner){
         status = "You Lost";
       }else{
         status = "Running";
