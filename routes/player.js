@@ -16,9 +16,6 @@ function init(){
             });
         } else {
             contestOverview(contestData, req.params.playerId);
-            if(contestData.test){
-              res.json(contestData);
-            }else{
               res.render('player/overview', {
                 title: 'Mijn Kroegentochten',
                 playerId: req.params.playerId,
