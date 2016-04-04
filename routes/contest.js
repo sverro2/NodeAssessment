@@ -189,8 +189,7 @@ function init() {
     // / Location check-in
 }
 // Export
-module.exports = function(pass, usr, mongoose) {
-    passport = pass;
+module.exports = function(usr, mongoose) {
     user = usr;
     console.log(user);
     Contest = mongoose.model("Contest");
