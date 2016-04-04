@@ -75,11 +75,10 @@ app.use(passport.session()); // persistent login sessions
 app.use(user.middleware());
 
 // Routes
-
 var index = require('./routes/index')(user, mongoose);
 var planner = require('./routes/trip')(request, GLOBAL_VARS, mongoose, user);
 var auth = require('./routes/login')(passport);
-var contest = require('./routes/contest')(user, mongoose)
+var contest = require('./routes/contest')(passport, user, mongoose)
 
 app.use('/', index);
 app.use('/planner', planner);

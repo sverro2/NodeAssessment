@@ -14,7 +14,6 @@
                         <input type="text" class="form-control" placeholder="Big Den Bosch Tour 2016!" value="{{name}}" name="contestName" disabled>
                     </fieldset>
                     <input type="hidden" name="contestId" value="{{id}}" />
-                    <input type="hidden" id="userName" name="userName" value="{{userName}}" />
                 </form>
             </div>
         </div>
@@ -52,7 +51,7 @@
                         <div class="input-group">
                             <h4 class="search">{{name}}</h4>
                             <span class="input-group-btn">
-                                <button id="{{name}}" data-url="locations/{{_id}}/visits" class="btn btn-success checkinOnClick">Check in</button>
+                                <a id="{{name}}" href="locations/{{id}}" class="btn btn-info viewOnClick">View</a>
                             </span>
                         </div>
                     </div>
@@ -60,43 +59,4 @@
             </div>
         </div>
     </div>
-<!-- Niet af -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                Latest check-in
-            </h4>
-        </div>
-
-        <div class="panel-body">
-            <div id="messages" class="list-group filterable">
-
-            </div>
-        </div>
-    </div>
-<!-- / Niet af-->
 </div>
-<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-    var socket = io();
-    socket.on('userCheckin', function(msg){
-        $('#messages').html($('<span>').text(msg));
-    });
-    $('.checkinOnClick').on('click', function() {
-        console.log("check");
-        var clickedButton = $(this);
-        var url = clickedButton.data('url');
-        var location = $(this).attr("id");
-        var user = $("#userName").attr("value");
-        $.ajax({
-            url: url,
-            type: 'POST',
-            success: function() {
-                console.log(user);
-                socket.emit('userCheckin', user, location); 
-                return false;
-            }
-        });
-    });
-</script>

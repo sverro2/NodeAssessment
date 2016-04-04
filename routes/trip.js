@@ -149,24 +149,6 @@ router.post('/:id/searchLocations/:key', function(req, res){
   });
 });
 
-// Location check-in
-router.get('/:id/visits', function (req, res) {
-    var trip = req.params.id;
-    Trip.findOne({_id: trip}).exec(function(err, tripData){
-      if(err){
-        res.redirect('/planner');
-      }else{
-        res.render('./trip/checkin', {
-          title: 'Bewerk Trip: check-in',
-          id: tripData._id,
-          name: tripData.name,
-          description: tripData.description,
-          route: tripData.route});
-      }
-    });
-});
-// / Location check-in
-
 //only adds item to the list when not already added to planning or the list itself
 function addItemToReturnObject(item, returnObject, addedLocations){
   var exists;
