@@ -16,6 +16,8 @@ $(document).ready(function() {
 
     $('.checkinOnClick').on('click', checkInRequest);
     $('#planning-to-add').on('click', '.addPlanningOnClick', addPlanningRequest);
+    
+    findPlanning();
 });
 
 function filterResults() {
@@ -91,34 +93,34 @@ function addPlanningRequest() {
         data: {
             planning: $(this).attr('id')
         },
-        success: function (serv) {
+        success: function(serv) {
             //$('#planning-to-add').hide();
             console.log("yesssssss!");
-            if(serv){
-              window.location.href =serv.url;
-            }else{
-              var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
-              $('#planning-to-add').html(successHtml);
+            if (serv) {
+                window.location.href = serv.url;
+            } else {
+                var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
+                $('#planning-to-add').html(successHtml);
             }
         }
-      });
+    });
 }
 
-function deleteRequest(){
-  var $clickedButton = $(this);
-  var urlToDelete = $clickedButton.data('url');
-  var refresh = ($clickedButton.attr('data-refresh'));
+function deleteRequest() {
+    var $clickedButton = $(this);
+    var urlToDelete = $clickedButton.data('url');
+    var refresh = ($clickedButton.attr('data-refresh'));
 
-  $.ajax({
-    url: urlToDelete,
-    type: 'DELETE',
-    success: function(result) {
-      $clickedButton.closest('.list-group-item').hide();
-      if(refresh){
-        location.reload(true);
-      }
-    }
-  });
+    $.ajax({
+        url: urlToDelete,
+        type: 'DELETE',
+        success: function(result) {
+            $clickedButton.closest('.list-group-item').hide();
+            if (refresh) {
+                location.reload(true);
+            }
+        }
+    });
 }
 
 function checkInRequest() {
@@ -126,11 +128,14 @@ function checkInRequest() {
     var clickedButton = $(this);
     var url = clickedButton.data('url');
     var location = $(this).attr("id");
+    var user = $("#userName").attr("value");
+
     $.ajax({
         url: url,
         type: 'POST',
         success: function() {
-            socket.emit('userCheckin', "rik", location); // user is nu nog hardcoded...
+            clickedButton.closest('.list-group-item').hide();
+            socket.emit('userCheckin', user, location); 
             return false;
         }
     });
