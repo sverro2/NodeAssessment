@@ -104,6 +104,42 @@ function init(){
       }
     );
   });
+  
+  
+  // Locaties per player per contest
+  router.get('/:playerId/contests/:contestId/' ,function(req,res){
+      var player = req.params.playerId;
+      var contest = req.params.contestId;
+      
+      Contest.findOne({_id: contest}).populate('locationVisits contestLocationPlanning').exec(function(err, contestData){
+            var locationsVisited = [];
+            var locationsToGo = [];
+            
+            for(var i = 0; i < contestData.locationVisits.length; i++){
+                if(contestData.locationVisits[i].user.toString() === player.toString()){
+                    locationsVisited.push(contestData.locationVisits[i].location);
+                }
+            }
+            
+            for(var i = 0; i < contestData.contestLocationPlanning.route.length; i++){
+                if(locationsVisited.indexOf(contestData.contestLocationPlanning.route[i].name) < 0){
+                    locationsToGo.push(contestData.contestLocationPlanning.route[i]);
+                }
+            }
+            
+            if (err) {
+                console.log("an error occurred: " + err);
+            } else {
+                // TODO: compare locations visited and yet to visit for user
+                res.render('player/contests-per-player', {
+                    contest: contestData,
+                    locationsVisited: locationsVisited,
+                    locationsToGo : locationsToGo,
+                });
+            }
+      });
+  });
+  // /Locaties per player per contest
 
 }
 
