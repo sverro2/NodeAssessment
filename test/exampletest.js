@@ -2,7 +2,11 @@ var express = require('express');
 var request = require('supertest');
 var expect = require('chai').expect;
 var should = require('chai').should();
+var exphbs  = require('express-handlebars');
 var app = express();
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 /*Objects to be used when mockig*/
 
@@ -10,9 +14,30 @@ var app = express();
 var mongoose = {
   model: function(name){
     return {
+      //function to mock database requist Trip
       getLocations : function(a, callback){
           locations = placesRequestResponse;
         callback(locations);
+      },
+      //find function for playertest
+      find: function(){
+        return{
+          select: function(){
+            return{
+              exec: function(callback){
+                var err = false;
+                var contestData = {a: 'b'};
+                callback(err, contestData);
+              }
+            }
+          }
+        }
+      },
+      and: function(){
+        return
+      },
+      or: function(){
+        return
       }
     }
   }
@@ -120,6 +145,25 @@ describe("Trip", function () {
     });
 });
 
+var player = require('../routes/player')(usr, mongoose);
+app.use('/player', player);
+var contestOverview = player.contestOverviewFunc;
+
+describe("Player", function () {
+    /* Moet slagen */
+    it("Win / Lose / Running / Due correctly detected", function (done) {
+        makeRequest('/player/playerId', 200, function (err, res) {
+            if (err) { return done(err); }
+            contestOverview(playerOverview, "570170d30a7cd40913b59416");
+
+            console.log("stuff: " + JSON.stringify(playerOverview));
+            console.log(JSON.stringify(res.text));
+            console.log("body " + JSON.stringify(res.body))
+            done();
+        });
+    });
+});
+
 //objects used for testing data
 var googlePlacesResponce = {
    "html_attributions" : [],
@@ -164,3 +208,6 @@ var placesRequestResponse = {
     }
  ]
 }
+
+var playerOverview = [{"_id":"570118b8528c58003a6957cd","name":"jhfdjkfhd","description":"grrgrge","startDate":"2016-04-04T00:00:00.000Z","endDate":"2016-04-09T00:00:00.000Z","winner":"570170d30a7cd40913b59416"},{"_id":"57011a5cc4efd5403a6a641e","name":"frff","description":"regtrgt","startDate":"2016-03-29T00:00:00.000Z","endDate":"2016-04-01T00:00:00.000Z"},
+{"_id":"57023760e66bacf5039823bd","name":"testContest5","description":"descripionTest","startDate":"2016-04-10T04:37:20.394Z","endDate":"2016-04-15T23:30:40.394Z"},{"_id":"5702351a1856ee252c086ada","name":"testContest2","description":"descripionTest","startDate":"2016-04-10T04:27:38.281Z","endDate":"2016-04-15T23:20:58.281Z","winner":"570170d30a8cd40913b59416"}];
