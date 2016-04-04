@@ -1,0 +1,62 @@
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        Basic Contest Information</a>
+      </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form>
+                    <fieldset class="form-group">
+                        <label for="contestName">The contest's Name </label>
+                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour 2016!" value="{{name}}" name="contestName" disabled>
+                    </fieldset>
+                    <input type="hidden" name="contestId" value="{{id}}" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        Basic Trip Information</a>
+      </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form>
+                    <fieldset class="form-group">
+                        <label for="tripName">The trip's Name </label>
+                        <input type="text" class="form-control" placeholder="Big Den Bosch Tour" value="{{trip.name}}" name="tripName" disabled>
+                    </fieldset>
+                    <input type="hidden" name="tripId" value="{{trip._id}}" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                Locations
+            </h4>
+        </div>
+
+        <div class="panel-body">
+            <div class="list-group filterable">
+                {{#each trip.route}}
+                    <div class="list-group-item filter-item">
+                        <div class="input-group">
+                            <h4 class="search">{{name}}</h4>
+                            <span class="input-group-btn">
+                                <a id="{{name}}" href="locations/{{id}}" class="btn btn-info viewOnClick">View</a>
+                            </span>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

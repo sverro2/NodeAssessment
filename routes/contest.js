@@ -82,21 +82,21 @@ function init() {
     // Location check-in
     router.get('/:contestId/planner/:planningId/visits', user.is('player'), function(req, res) {
         var username = "An user";
-        
-        if(req.user.local.email){
+
+        if (req.user.local.email) {
             username = req.user.local.email;
         }
-        if(req.user.google.name){
+        if (req.user.google.name) {
             username = req.user.google.name;
         }
-        if(req.user.facebook.name){
+        if (req.user.facebook.name) {
             username = req.user.facebook.name;
         }
-        
+
         Contest.findOne({ _id: req.params.contestId }).exec(function(err, contestData) {
             Trip.findOne({ _id: contestData.contestLocationPlanning }).exec(function(err, tripData) {
                 if (err) {
-                    res.redirect('/planner');
+                    res.redirect('/home');
                 } else {
                     res.render('./trip/checkin', {
                         id: contestData._id,
@@ -131,12 +131,51 @@ function init() {
         });
     });
 
-    router.get('/:contestId/planner/:planningId/locations/:locationId/visits', function(req, res) {
+    router.get('/:contestId/planner/:planningId/locations/', function(req, res) {
+        var contest = req.params.contestId;
+        var planning = req.params.planningId;
+
+        Contest.findOne({ _id: contest }).exec(function(err, contestData) {
+            Trip.findOne({ _id: planning }).exec(function(err, tripData) {
+                if (err) {
+                    res.redirect('/home');
+                } else {
+                    res.render('./trip/contestlocations', {
+                        id: contestData._id,
+                        name: contestData.name,
+                        trip: tripData,
+                    });
+                }
+            });
+        });
+    });
+
+    router.get('/:contestId/planner/:planningId/locations/:locationId/', function(req, res) {
+        var contest = req.params.contestId;
         var trip = req.params.planningId;
         var location = req.params.locationId;
 
-        // TODO: Locatie ophalen (Plus visits)
-
+        // HIER WAS JE!!! POPULATE ENZO!!!
+        Trip.findOne({ _id: trip }, { 'route': { $elemMatch: { _id: location } } }, function(err, location) {
+            Contest.findOne({ _id: contest }).populate('locationVisits contestLocationPlanning').exec(function(err, contestData) {
+                var locationVisitsPerLocation = [];
+                for (var i = 0; i < contestData.locationVisits.length; i++) {
+                    if (contestData.locationVisits[i].location === location.route[0].name) {
+                        locationVisitsPerLocation.push(contestData.locationVisits[i]);
+                    }
+                }
+                if (err) {
+                    res.redirect('/home');
+                } else {
+                    res.render('./trip/location', {
+                        contest: contestData.name,
+                        planning: contestData.contestLocationPlanning.name,
+                        location: location.route[0].name,
+                        visits: locationVisitsPerLocation
+                    });
+                }
+            });
+        });
     });
     // / Location check-in
 }
