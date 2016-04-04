@@ -10,12 +10,12 @@ $(document).ready(function() {
 
     $('.filterButton').on('click', filterResults);
     $('.removeOnClick').on('click', deleteRequest);
+    $('.updateOnClick').on('click', addPlanningRequest);
     $('.filterInput').on('keyup', filterResults);
     $('#searchLocationsButton').on('click', findLocations);
 
     $('.checkinOnClick').on('click', checkInRequest);
     $('#planning-to-add').on('click', '.addPlanningOnClick', addPlanningRequest);
-    findPlanning();
 });
 
 function filterResults() {
@@ -81,17 +81,25 @@ function findPlanning() {
 }
 
 function addPlanningRequest() {
-    var clickedButton = $(this);
-    var url = clickedButton.data('url');
+    var $clickedButton = $(this);
+    var url = $clickedButton.data('url');
+    var refresh = ($clickedButton.attr('data-refresh'));
+
     $.ajax({
         url: url,
         type: 'PUT',
         data: {
             planning: $(this).attr('id')
         },
-        success: function(result) {
-            var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
-            $('#planning-to-add').html(successHtml);
+        success: function (serv) {
+            //$('#planning-to-add').hide();
+            console.log("yesssssss!");
+            if(serv){
+              window.location.href =serv.url;
+            }else{
+              var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
+              $('#planning-to-add').html(successHtml);
+            }
         }
       });
 }
@@ -99,7 +107,7 @@ function addPlanningRequest() {
 function deleteRequest(){
   var $clickedButton = $(this);
   var urlToDelete = $clickedButton.data('url');
-  var refresh = ($clickedButton.attr('data-refresh'))
+  var refresh = ($clickedButton.attr('data-refresh'));
 
   $.ajax({
     url: urlToDelete,

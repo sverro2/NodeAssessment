@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var request, places_key, Contest, Trip, Visit, User;
 var async = require('async');
-var socket = require('../socket').init();
 
 /* GET home page. */
 router.get('/', function (req, res) {
