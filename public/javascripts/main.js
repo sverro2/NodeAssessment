@@ -16,8 +16,6 @@ $(document).ready(function() {
 
     $('.checkinOnClick').on('click', checkInRequest);
     $('#planning-to-add').on('click', '.addPlanningOnClick', addPlanningRequest);
-    
-    findPlanning();
 });
 
 function filterResults() {
