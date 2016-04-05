@@ -7,13 +7,6 @@ function init(){
     res.redirect('/player/' + req.user._id);
   });
 
-  router.get('/test', function (req, res) {
-    //Contest.findOne({ _id: contest }).populate('locationVisits').select('locationVisits').exec(function(err, visits) { ... });
-    /*Contest.find({'_id': "56fd8d419c877dbc30000bf2"}).populate('contestLocationPlanning').exec(function (err, contestData) {
-        res.json(contestData);
-    });*/
-  });
-
   /* GET home page. */
   router.get('/:playerId', function (req, res) {
     Contest.find({'players': req.params.playerId}).select('name description startDate endDate winner').exec(function (err, contestData) {
@@ -24,42 +17,27 @@ function init(){
         } else {
             contestOverview(contestData, req.params.playerId);
             res.render('player/overview', {
-                title: 'Mijn Kroegentochten',
-                playerId: req.params.playerId,
-                contests: contestData
+              title: 'Mijn Kroegentochten',
+              playerId: req.params.playerId,
+              contests: contestData
             });
         }
     });
   });
 
-  function contestOverview(contestData, playerId){
-    for(var x = 0; x < contestData.length; x++){
-      var status;
-      var currentDate = new Date();
-      if(contestData[x].winner == playerId){
-        status = "You Won!";
-      }else if(contestData[x].startDate > currentDate){
-        status = "Due";
-      }else if(contestData[x].endDate < currentDate){
-        status = "You Lost";
-      }else{
-        status = "Running";
-      }
-
-      contestData[x].status = status;
-    }
-  }
-
   /* GET home page. */
   router.get('/:playerId/contests', function (req, res) {
     Contest.find().and(
-      [{'startDate': {'$gt': new Date()}},
-      {'$or':
-        [
-          {'players': null},
-          {'players': {'$ne': req.params.playerId}}
-        ]
-      }]
+      [
+        {'startDate': {'$gt': new Date()}},
+        {'$or':
+          [
+            {'players': null},
+            {'players': {'$ne': req.params.playerId}}
+          ]
+        },
+        {'contestLocationPlanning': {'$ne': null}}
+      ]
     ).select('name description startDate endDate').exec(function (err, contestData) {
         if (err) {
             res.render('player/contests-available', {
@@ -104,30 +82,29 @@ function init(){
       }
     );
   });
-  
-  
+
   // Locaties per player per contest
   router.get('/:playerId/contests/:contestId/', User.is('player') ,function(req,res){
       var player = req.params.playerId;
       var contest = req.params.contestId;
-      
+
       Contest.findOne({_id: contest}).populate('locationVisits contestLocationPlanning').exec(function(err, contestData){
             var locationsVisited = [];
             var locationsToGo = [];
             var username = "An user";
-            
+
             for(var i = 0; i < contestData.locationVisits.length; i++){
                 if(contestData.locationVisits[i].user.toString() === player.toString()){
                     locationsVisited.push(contestData.locationVisits[i].location);
                 }
             }
-            
+
             for(var i = 0; i < contestData.contestLocationPlanning.route.length; i++){
                 if(locationsVisited.indexOf(contestData.contestLocationPlanning.route[i].name) < 0){
                     locationsToGo.push(contestData.contestLocationPlanning.route[i]);
                 }
             }
-            
+
             if (req.user.local.email) {
                 username = req.user.local.email;
             }
@@ -137,7 +114,7 @@ function init(){
             if (req.user.facebook.name) {
                 username = req.user.facebook.name;
             }
-            
+
             if (err) {
                 res.render('player/overview');
             } else {
@@ -150,8 +127,24 @@ function init(){
             }
       });
   });
+}
   // /Locaties per player per contest
 
+function contestOverview(contestData, playerId){
+  for(var x = 0; x < contestData.length; x++){
+    var status;
+    var currentDate = new Date();
+    if(contestData[x].winner == playerId){
+      status = "You Won!";
+    }else if(contestData[x].startDate > currentDate){
+      status = "Due";
+    }else if(contestData[x].endDate < currentDate || contestData[x].winner){
+      status = "You Lost";
+    }else{
+      status = "Running";
+    }
+    contestData[x].status = status;
+  }
 }
 
 
@@ -161,6 +154,7 @@ module.exports = function (user, mongoose){
     Trip = mongoose.model('ContestLocationPlanning');
     Visit = mongoose.model('ContestLocationData');
     User = user;
+    router.contestOverviewFunc = contestOverview;
     init();
     return router;
 };

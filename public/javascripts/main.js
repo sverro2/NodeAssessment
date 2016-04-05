@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     $('.checkinOnClick').on('click', checkInRequest);
     $('#planning-to-add').on('click', '.addPlanningOnClick', addPlanningRequest);
-    
+
     findPlanning();
 });
 
@@ -95,12 +95,11 @@ function addPlanningRequest() {
         },
         success: function(serv) {
             //$('#planning-to-add').hide();
-            console.log("yesssssss!");
-            if (serv) {
-                window.location.href = serv.url;
-            } else {
-                var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
-                $('#planning-to-add').html(successHtml);
+            if(serv){
+              window.location.href =serv.url;
+            }else{
+              var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
+              $('#planning-to-add').html(successHtml);
             }
         }
     });
@@ -135,7 +134,7 @@ function checkInRequest() {
         type: 'POST',
         success: function() {
             clickedButton.closest('.list-group-item').hide();
-            socket.emit('userCheckin', user, location); 
+            socket.emit('userCheckin', user, location);
             return false;
         }
     });
