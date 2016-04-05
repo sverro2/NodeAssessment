@@ -88,43 +88,24 @@ function init(){
       var player = req.params.playerId;
       var contest = req.params.contestId;
 
-      Contest.findOne({_id: contest}).populate('locationVisits contestLocationPlanning').exec(function(err, contestData){
-            var locationsVisited = [];
-            var locationsToGo = [];
-            var username = "An user";
+      var username = "An user";
+      if (req.user.local.email) {
+          username = req.user.local.email;
+      }
+      if (req.user.google.name) {
+          username = req.user.google.name;
+      }
+      if (req.user.facebook.name) {
+          username = req.user.facebook.name;
+      }
 
-            for(var i = 0; i < contestData.locationVisits.length; i++){
-                if(contestData.locationVisits[i].user.toString() === player.toString()){
-                    locationsVisited.push(contestData.locationVisits[i].location);
-                }
-            }
-
-            for(var i = 0; i < contestData.contestLocationPlanning.route.length; i++){
-                if(locationsVisited.indexOf(contestData.contestLocationPlanning.route[i].name) < 0){
-                    locationsToGo.push(contestData.contestLocationPlanning.route[i]);
-                }
-            }
-
-            if (req.user.local.email) {
-                username = req.user.local.email;
-            }
-            if (req.user.google.name) {
-                username = req.user.google.name;
-            }
-            if (req.user.facebook.name) {
-                username = req.user.facebook.name;
-            }
-
-            if (err) {
-                res.render('player/overview');
-            } else {
-                res.render('player/contests-per-player', {
-                    userName: username,
-                    contest: contestData,
-                    locationsVisited: locationsVisited,
-                    locationsToGo : locationsToGo,
-                });
-            }
+      Contest.playerStatusForContest(player, contest, function(data){
+        res.render('player/contests-per-player', {
+            userName: username,
+            contest: data.contest,
+            locationsVisited: data.locationsVisited,
+            locationsToGo : data.locationsToGo,
+        });
       });
   });
 }
