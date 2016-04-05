@@ -1,4 +1,4 @@
-//var socket = io();
+var socket = io();
 
 $(document).ready(function() {
     $("#startDate").datepicker({

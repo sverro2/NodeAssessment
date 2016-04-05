@@ -155,7 +155,6 @@ function init() {
         var trip = req.params.planningId;
         var location = req.params.locationId;
 
-        // HIER WAS JE!!! POPULATE ENZO!!!
         Trip.findOne({ _id: trip }, { 'route': { $elemMatch: { _id: location } } }, function(err, location) {
             Contest.findOne({ _id: contest }).populate('locationVisits contestLocationPlanning').exec(function(err, contestData) {
                 var locationVisitsPerLocation = [];
@@ -176,15 +175,6 @@ function init() {
                 }
             });
         });
-    });
-    // / Location check-in
-
-    router.get('/:contestId/planner/:planningId/locations/:locationId/visits', function(req, res) {
-        var trip = req.params.planningId;
-        var location = req.params.locationId;
-
-        // TODO: Locatie ophalen (Plus visits)
-
     });
     // / Location check-in
 }
