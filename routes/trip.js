@@ -97,7 +97,6 @@ router.post('/:id/searchLocations/:key', function(req, res){
     var locationData = JSON.parse(body)
     if(locationData.results[0]){
       var location = locationData.results[0].geometry.location;
-
       //async search all POI's
       var googlePlacesRequests = [];
       var cafes, bars;
