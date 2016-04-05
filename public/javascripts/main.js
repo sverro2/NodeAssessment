@@ -29,19 +29,6 @@ function filterResults() {
     });
 }
 
-function deleteRequest() {
-    var $clickedButton = $(this);
-    var urlToDelete = $clickedButton.data('url');
-    $.ajax({
-        url: urlToDelete,
-        type: 'DELETE',
-        success: function(result) {
-            console.log("deleted!");
-            $clickedButton.closest('.list-group-item').hide();
-        }
-    });
-}
-
 function findLocations() {
     var search = $('#locationInput').val();
     var baseUrl = $('#searchLocationsButton').data("url");
@@ -96,7 +83,7 @@ function addPlanningRequest() {
             if(serv){
               window.location.href =serv.url;
             }else{
-              var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='./'>Back</a></span>"
+              var successHtml = "<span>Planning succesvol toegevoegd! <a class='btn btn-success' href='/contest'>Back</a></span>"
               $('#planning-to-add').html(successHtml);
             }
         }
@@ -108,14 +95,19 @@ function deleteRequest() {
     var urlToDelete = $clickedButton.data('url');
     var refresh = ($clickedButton.attr('data-refresh'));
 
+    console.log("deleteding");
     $.ajax({
         url: urlToDelete,
         type: 'DELETE',
         success: function(result) {
+          console.log("delete succesvol");
             $clickedButton.closest('.list-group-item').hide();
             if (refresh) {
                 location.reload(true);
             }
+        },
+        error: function(err){
+          console.log("kon niet deleten: " + JSON.stringify(err));
         }
     });
 }

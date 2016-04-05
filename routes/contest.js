@@ -54,7 +54,7 @@ function init() {
                 console.log(err);
                 res.redirect('./new-contest');
             } else {
-                res.redirect('./');
+                res.redirect('/contest');
             }
         });
     });
@@ -85,6 +85,7 @@ function init() {
             if (err) {
                 res.redirect('');
             }
+            res.send();
         })
     });
 
@@ -93,6 +94,7 @@ function init() {
             if (err) {
                 res.status(300)
             }
+            res.send();
         });
     });
     // / Contest CRUD
@@ -175,6 +177,9 @@ function init() {
 
         Trip.findOne({ _id: trip }, { 'route': { $elemMatch: { _id: location } } }, function(err, location) {
             Contest.findOne({ _id: contest }).populate('locationVisits contestLocationPlanning').exec(function(err, contestData) {
+                if(!location.route){
+                  res.send();
+                }
                 var locationVisitsPerLocation = [];
                 for (var i = 0; i < contestData.locationVisits.length; i++) {
                     if (contestData.locationVisits[i].location === location.route[0].name) {

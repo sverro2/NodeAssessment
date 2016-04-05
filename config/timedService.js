@@ -22,7 +22,7 @@ function checkWinners() {
         {'startDate': {'$lte': currentDate}},
         { 'endDate': { '$gte': currentDate } },
         { 'winner': null },
-        { 'players': { '$ne': null } },
+        { 'players': { '$ne': null } }
     ]).select('players name').exec(function(err, contestData) {
         for (var x = 0; x < contestData.length; x++) {
             var amountOfPlayersInContest = contestData[x].players.length;
