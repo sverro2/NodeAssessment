@@ -10,6 +10,15 @@ function init() {
         res.render('login/index'); // load the index.ejs file
     });
 
+    router.get('/searchPlanning', function (req, res) {
+       Trip.find().select('name').exec(function (err, tripData) {
+           if (err) {
+               console.log('an error occurred while fetching the planninglist: ' + err);
+           }
+           res.json(tripData);
+       });
+    })
+
     router.get('/profile', user.is('player'), function(req, res) {
         res.render('login/profile', {
             user : req.user // get the user out of session and pass to template
