@@ -127,6 +127,7 @@ function checkInRequest() {
     var location = $(this).attr("id");
     var user = $("#userName").attr("value");
 
+    console.log(url);
     $.ajax({
         url: url,
         type: 'POST',

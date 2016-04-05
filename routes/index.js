@@ -16,15 +16,6 @@ function init() {
         });
     });
 
-    router.get('/searchPlanning', function (req, res) {
-        Trip.find().select('name').exec(function (err, tripData) {
-            if (err) {
-                console.log('an error occurred while fetching the planninglist: ' + err);
-            }
-            res.json(tripData);
-        });
-    })
-
     /* Returns a package with some values to assert correct implementation of test frameworks */
     router.get('/test', function (req, res) {
         var toReturn = {

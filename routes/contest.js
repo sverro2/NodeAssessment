@@ -9,7 +9,7 @@ var socket = require('../socket').init();
 
 function init() {
     // Contest CRUD
-    router.get('/', function(req, res, next) {
+    router.get('/', user.is('admin'), function(req, res, next) {
         Contest.find().select('name description startDate endDate contestLocationPlanning winner').populate('winner').exec(function(err, contestData) {
             if (err) {
                 res.render('home', {
@@ -42,7 +42,7 @@ function init() {
         });
     });
 
-    router.post('/', function(req, res) {
+    router.post('/', user.is('admin'), function(req, res) {
         var contest = new Contest({
             name: req.body.contestName,
             description: req.body.contestDescription,
@@ -59,11 +59,11 @@ function init() {
         });
     });
 
-    router.get('/new-contest', function(req, res) {
+    router.get('/new-contest', user.is('admin'), function(req, res) {
         res.render('trip/contestmaker', { title: 'Nieuwe tocht' });
     });
 
-    router.get('/:id', user.is('player'), function(req, res) {
+    router.get('/:id', user.is('admin'), function(req, res) {
         var contest = req.params.id;
         Contest.findOne({ _id: contest }).exec(function(err, contestData) {
             if (err) {
@@ -80,7 +80,7 @@ function init() {
         });
     });
 
-    router.put('/:id/planning/', function(req, res) {
+    router.put('/:id/planning/', user.is('admin'), function(req, res) {
         Contest.addPlanning(req.params.id, req.body.planning, function(err) {
             if (err) {
                 res.redirect('');
@@ -88,7 +88,7 @@ function init() {
         })
     });
 
-    router.delete('/:id', function(req, res) {
+    router.delete('/:id', user.is('admin'), function(req, res) {
         Contest.remove({ _id: req.params.id }, function(err) {
             if (err) {
                 res.status(300)
@@ -145,11 +145,11 @@ function init() {
                     });
                 }
             });
-            res.redirect('/planner');
+            res.send();
         });
     });
 
-    router.get('/:contestId/planner/:planningId/locations/', function(req, res) {
+    router.get('/:contestId/planner/:planningId/locations/', user.is('admin'), function(req, res) {
         var contest = req.params.contestId;
         var planning = req.params.planningId;
 
@@ -168,7 +168,7 @@ function init() {
         });
     });
 
-    router.get('/:contestId/planner/:planningId/locations/:locationId/', function(req, res) {
+    router.get('/:contestId/planner/:planningId/locations/:locationId/', user.is('admin'), function(req, res) {
         var contest = req.params.contestId;
         var trip = req.params.planningId;
         var location = req.params.locationId;
@@ -196,14 +196,14 @@ function init() {
         });
     });
     // / Location check-in
-
-    router.get('/:contestId/planner/:planningId/locations/:locationId/visits', function(req, res) {
+/*
+    router.get('/:contestId/planner/:planningId/locations/:locationId/visits', user.is('player'), function(req, res) {
         var trip = req.params.planningId;
         var location = req.params.locationId;
 
         // TODO: Locatie ophalen (Plus visits)
 
-    });
+    });*/
     // / Location check-in
 }
 // Export
