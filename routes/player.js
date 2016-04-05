@@ -8,7 +8,7 @@ function init(){
   });
 
   /* GET home page. */
-  router.get('/:playerId', function (req, res) {
+  router.get('/:playerId', User.is('player'), function (req, res) {
     Contest.find({'players': req.params.playerId}).select('name description startDate endDate winner').exec(function (err, contestData) {
         if (err) {
             res.render('player/overview', {
@@ -26,7 +26,7 @@ function init(){
   });
 
   /* GET home page. */
-  router.get('/:playerId/contests', function (req, res) {
+  router.get('/:playerId/contests', User.is('player'), function (req, res) {
     Contest.find().and(
       [
         {'startDate': {'$gt': new Date()}},
@@ -53,7 +53,7 @@ function init(){
   });
 
   /* Add a new contest to player */
-  router.put('/:playerId/contests/:contestId', function (req, res) {
+  router.put('/:playerId/contests/:contestId', User.is('player'), function (req, res) {
 
     Contest.findOne({'_id': req.params.contestId}).exec(function(err,contest){
       if(err){
@@ -69,7 +69,7 @@ function init(){
     });
   });
 
-  router.delete('/:playerId/contests/:contestId', function (req, res) {
+  router.delete('/:playerId/contests/:contestId', User.is('player'), function (req, res) {
     Contest.findOneAndUpdate(
       { _id: req.params.contestId },
       { $pull: { 'players': req.params.playerId } },
