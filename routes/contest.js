@@ -10,12 +10,30 @@ var socket = require('../socket').init();
 function init() {
     // Contest CRUD
     router.get('/', function(req, res, next) {
-        Contest.find().select('name description startDate endDate contestLocationPlanning').exec(function(err, contestData) {
+        Contest.find().select('name description startDate endDate contestLocationPlanning winner').populate('winner').exec(function(err, contestData) {
             if (err) {
                 res.render('home', {
                     title: 'Kroegentochten'
                 });
             } else {
+
+                //add winner name to contest information\
+                for(var x = 0; x < contestData.length; x++){
+                  if(contestData[x].winner){
+                    var winner = contestData[x].winner;
+                    if (winner.local.email) {
+                      winner = winner.local.email;
+                    }else if (winner.google.name) {
+                      winner = winner.google.name;
+                    }else if (winner.facebook.name) {
+                      winner = winner.facebook.name;
+                    }
+
+                    contestData[x].winner = null;
+                    contestData[x].winnerName = winner;
+                  }
+                }
+
                 res.render('home', {
                     title: 'Kroegentochten',
                     contests: contestData

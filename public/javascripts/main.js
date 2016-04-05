@@ -1,4 +1,4 @@
-//var socket = io();
+var socket = io();
 
 $(document).ready(function() {
     $("#startDate").datepicker({
@@ -16,8 +16,6 @@ $(document).ready(function() {
 
     $('.checkinOnClick').on('click', checkInRequest);
     $('#planning-to-add').on('click', '.addPlanningOnClick', addPlanningRequest);
-
-    findPlanning();
 });
 
 function filterResults() {

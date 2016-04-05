@@ -7,13 +7,12 @@
             </span>
         </div>
     </div>
-
     <div class="row top-buffer">
         <div class="list-group filterable">
             {{#each contests}}
                 <div class="list-group-item filter-item">
                     <div class="input-group">
-                        <h4 class="search">{{name}}</h4>
+                        <h4 class="search">{{name}}{{#if winnerName}} (contest won by {{winnerName}}){{/if}}</h4>
                         <span class="input-group-btn">
                             {{#unless contestLocationPlanning}}
                                 <a href="../contest/{{_id}}" class="btn btn-warning">Add planning</a>
@@ -35,5 +34,3 @@
         <a href="contest/new-contest" class="btn btn-primary pull-right btn-lg">Create a New Contest</a>
     </div>
 </div>
-
-
